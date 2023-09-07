@@ -1,1 +1,5 @@
 1. html and js for registration form.
+2. DOM manipulation
+3. Login and local storage
+4. Expense tracker
+5. Promise
