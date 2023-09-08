@@ -21,16 +21,16 @@ function displayUsersInDOM(users) {
 
     // Create an "Edit Email" button for each user
     const editButton = document.createElement('button');
-    editButton.textContent = 'Edit Email';
+    editButton.textContent = 'Edit';
     editButton.addEventListener('click', function () {
-      editUserEmail(index);
+      editUserEmail(users[0]);
     });
 
     // Create a delete button for each user
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
     deleteButton.addEventListener('click', function () {
-      deleteUser(index);
+      deleteUser(users[0]);
     });
 
     listItem.appendChild(editButton);
@@ -41,28 +41,47 @@ function displayUsersInDOM(users) {
 
 // Function to add a new user
 function addUser(name, email, phone) {
-  const users = getUsersFromLocalStorage();
-  users.push({ name, email, phone });
-  saveUsersToLocalStorage(users);
-  displayUsersInDOM(users);
+  const users = {
+    name, email, phone
+  }
+
+  axios.post("https://crudcrud.com/api/94a2e041edc144ef9b746700ccea140c/create",users)
+  .then(res => {
+    console.log(res.data)
+    displayUsersInDOM([res.data])
+  })
+  .catch(error => console.error(error))
 }
 
 // Function to delete a user
-function deleteUser(index) {
-  const users = getUsersFromLocalStorage();
-  users.splice(index, 1);
-  saveUsersToLocalStorage(users);
-  displayUsersInDOM(users);
+function deleteUser(user) {
+  axios.delete(`https://crudcrud.com/api/94a2e041edc144ef9b746700ccea140c/create/${user._id}`)
+  .then(res => {
+    displayUsersInDOM(res)
+  })
+  .catch(error => console.error(error))
 }
 
 // Function to edit a user's email
-function editUserEmail(index) {
-  const users = getUsersFromLocalStorage();
+function editUserEmail(user) {
   const newEmail = prompt('Enter the new email address:');
+  const newName = user.name
+  const newPhone = user.phone
+  const payload = {
+    email :newEmail,
+    name : newName ,
+    phone : newPhone,
+  }
   if (newEmail !== null) {
-    users[index].email = newEmail;
-    saveUsersToLocalStorage(users);
-    displayUsersInDOM(users);
+    user.email = newEmail;
+
+    axios.put(`https://crudcrud.com/api/94a2e041edc144ef9b746700ccea140c/create/${user._id}`,payload)
+    .then(res =>{
+      console.log(res)
+      console.log(res.data)
+      displayUsersInDOM([res.data])
+    })
+    .catch(error => console.error(error))
   }
 }
 
