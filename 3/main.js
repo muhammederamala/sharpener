@@ -1,7 +1,17 @@
-// Function to retrieve existing user data from local storage
-function getUsersFromLocalStorage() {
-  const usersJSON = localStorage.getItem('users');
-  return JSON.parse(usersJSON) || [];
+// // Function to retrieve existing user data from local storage
+function getUsersFromCrud() {
+  return axios("https://crudcrud.com/api/94a2e041edc144ef9b746700ccea140c/create")
+  .then(res => {
+    console.log(res)
+    return res.data || []
+  })
+  .catch(error => {
+    console.error(error);
+    return [];
+  });
+
+  // const usersJSON = localStorage.getItem('users');
+  // return JSON.parse(usersJSON) || [];
 }
 
 // Function to save user data to local storage
@@ -57,7 +67,7 @@ function addUser(name, email, phone) {
 function deleteUser(user) {
   axios.delete(`https://crudcrud.com/api/94a2e041edc144ef9b746700ccea140c/create/${user._id}`)
   .then(res => {
-    displayUsersInDOM(res)
+    console.log("deleted",res)
   })
   .catch(error => console.error(error))
 }
@@ -100,6 +110,10 @@ document.getElementById('userForm').addEventListener('submit', function (e) {
   }
 });
 
-// Initial display of users
-const initialUsers = getUsersFromLocalStorage();
-displayUsersInDOM(initialUsers);
+
+window.onload = function () {
+  getUsersFromCrud()
+    .then(users => {
+      displayUsersInDOM(users);
+    });
+};
