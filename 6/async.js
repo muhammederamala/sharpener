@@ -10,7 +10,7 @@ const preMovie = async () => {
 
     const getPopcorn = new Promise((resolve, reject) =>{
         setTimeout(()=>{
-            reject("popcorns")
+            resolve("popcorns")
         },1000)
     })
 
