@@ -97,4 +97,4 @@ document.getElementById("todo-form").addEventListener("submit", function(event) 
 loadAndRenderTasks();
 
 // Periodically reload and render tasks (e.g., every 5 seconds)
-setInterval(loadAndRenderTasks, 5000);
+setInterval(loadAndRenderTasks, 10000);
