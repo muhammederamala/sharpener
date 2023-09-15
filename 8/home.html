@@ -1,23 +1,44 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>
-            Rest API
-        </title>
-    </head>
-    <body>
-        <div>
-            <form id="todo-form">
-                <input type="text" id="title" placeholder="enter task name">
-                <input type = "text" id="description" placeholder="enter details">
-                <button type="submit" id="submit">Add</button>
-            </form>
+<head>
+    <title>Rest API</title>
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>To-Do List</h1>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <form id="todo-form">
+                    <div class="form-group">
+                        <input type="text" id="title" class="form-control" placeholder="Enter task name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="description" class="form-control" placeholder="Enter details">
+                    </div>
+                    <button type="submit" id="submit" class="btn btn-primary">Add</button>
+                </form>
+            </div>
         </div>
 
-        <ul id="task-list">
+        <ul id="task-list" class="list-group mt-4">
+            <!-- Your task items will be added here -->
         </ul>
+    </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
-        <script src="main.js"></script>
-    </body>
-    
+    <!-- Add Axios library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+
+    <!-- Add Bootstrap JS and jQuery scripts if needed -->
+    <!--
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    -->
+
+    <!-- Include your custom JavaScript file -->
+    <script src="main.js"></script>
+</body>
 </html>

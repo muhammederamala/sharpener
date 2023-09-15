@@ -45,33 +45,44 @@ function editTask(id){
 
 
 // function to render html elements
-function renderElements(name,description,id){
+function renderElements(name, description, id) {
     const listItem = document.createElement("li");
-    
+
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
-    deleteButton.style.width = '50px'
+    deleteButton.style.backgroundColor = 'red'; // Set background color
+    deleteButton.style.color = 'white'; // Set text color
+    deleteButton.style.padding = '5px 10px'; // Set padding
+    deleteButton.style.marginRight = '5px'; // Add some custom styling
+    deleteButton.style.width = '80px'; // Set width
+    deleteButton.style.height = '30px'; // Set height
     deleteButton.addEventListener('click', function () {
         deleteTask(id);
     });
 
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit';
-    editButton.style.width = '50px'
+    editButton.style.backgroundColor = 'blue'; // Set background color
+    editButton.style.color = 'white'; // Set text color
+    editButton.style.padding = '5px 10px'; // Set padding
+    editButton.style.marginRight = '5px'; // Add some custom styling
+    editButton.style.width = '80px'; // Set width
+    editButton.style.height = '30px'; // Set height
     editButton.addEventListener('click', function () {
         editTask(id);
     });
 
-    listItem.innerHTML = `<strong>${name}:</strong> <br> ${description}`
+    listItem.innerHTML = `<strong>${name}:</strong> <br> ${description}`;
 
-    document.getElementById("task-list").appendChild(listItem)
-    document.getElementById("task-list").appendChild(document.createElement("br"))
-    document.getElementById("task-list").appendChild(editButton)
-    document.getElementById("task-list").appendChild(deleteButton)
+    document.getElementById("task-list").appendChild(listItem);
+    document.getElementById("task-list").appendChild(document.createElement("br"));
+    document.getElementById("task-list").appendChild(editButton);
+    document.getElementById("task-list").appendChild(deleteButton);
 
     document.getElementById("title").value = "";
     document.getElementById("description").value = "";
 }
+
 
 
 // obtain data from form
