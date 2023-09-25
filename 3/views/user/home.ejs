@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Information</title>
+  <link rel="stylesheet" href="/css/home.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+  <h1>User Information</h1>
+
+  <form class="userform" id="userForm" action="/user/add-user" method="POST">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" name="phone" required><br><br>
+
+    <input type="submit" value="Submit">
+  </form>
+
+  <h2>User List</h2>
+  <div>  
+    <ul id="userList">
+      <% users.forEach(user => { %>
+        <div class="user-list-container">
+        <li>Name: <%= user.name %></li>
+        <li>Email: <%= user.email %></li>
+        <li>Phone: <%= user.phone %></li>
+        <a href="/user/edit/<%= user.id %>" class="edit-button">
+          <button>
+            Edit
+          </button>
+        </a>
+        <form action="/user/delete" method="POST">
+          <input type="hidden" value="<%= user.id %>" name="id">
+          <button type="submit">Delete</button>
+        </form>
+      </div>
+      <% }); %>
+    </ul>  
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+  <script src="main.js"></script>
+
+</body>
+</html>
