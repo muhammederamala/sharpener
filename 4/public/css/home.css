@@ -1,0 +1,83 @@
+/* Reset some default styles */
+body, h1, h2, form, label, input, ul {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Apply a background color and set font styles */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+  }
+  
+  /* Style the header */
+  h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Style the form */
+  .userform {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Style form elements */
+  label {
+    font-weight: bold;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  /* Style the user list */
+  h2 {
+    font-size: 20px;
+    margin-top: 30px;
+  }
+  
+  ul#userList {
+    list-style-type: none;
+    margin-top: 10px;
+  }
+  
+  ul#userList li {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Style for the user list container */
+.user-list-container {
+  border: 1px solid #ccc; /* Add a border */
+  padding: 20px; /* Add some padding to create space inside the box */
+  border-radius: 5px; /* Add rounded corners */
+  background-color: #f9f9f9; /* Set a background color */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  margin-bottom: 20px;
+  width: 350px;
+}

@@ -1,5 +1,5 @@
 1. arrow function
 2. Student object
-3. async and promise
+3. promise
 4. create node server
 5. chat app
