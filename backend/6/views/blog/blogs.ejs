@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog Posts</title>
+    <link rel="stylesheet" type="text/css" href="/css/blog.css">
+</head>
+<body>
+    <h1>Blog Posts</h1>
+
+    <% if (blogs.length > 0) { %>
+        <% blogs.forEach((blog) => { %>
+            <div class="blog-box">
+                <h2><%= blog.title %></h2>
+                <p><%= blog.content %></p>
+                <form method="POST" action="/delete-post/<%= blog.id %>">
+                    <button type="submit">Delete Post</button>
+                </form>
+
+                <div class="comment-section">
+                    <h3>Add a Comment</h3>
+                    <form method="POST" action="/add-comment/<%= blog.id %>">
+                        <textarea name="commentContent" rows="4" required></textarea>
+                        <button type="submit">Add Comment</button>
+                    </form>
+                </div>
+
+                <% if (blog.comments.length > 0) { %>
+                    <h3>Comments</h3>
+                    <ul class="comment-list">
+                        <% blog.comments.forEach((comment) => { %>
+                            <li>
+                                <%= comment.content %>
+                                <form method="POST" action="/delete-comment/<%= comment.id %>">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </li>
+                        <% }) %>
+                    </ul>
+                <% } %>
+            </div>
+        <% }) %>
+        <a href="/">
+            <button>
+                Create Blog
+            </button>
+        </a>
+    <% } else { %>
+        <p>No blog posts available.</p>
+        <a href="/">
+            <button>
+                Create Blog
+            </button>
+        </a>
+    <% } %>
+</body>
+</html>

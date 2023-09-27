@@ -3,3 +3,4 @@
 3. promise
 4. create node server
 5. chat app
+6. Node project test , create a blog website
