@@ -10,13 +10,46 @@ exports.postSignup = async (req,res,next) =>{
     try{
         console.log(req.body)
         const {name,email,password} = req.body
+
+        const user = await User.findOne({ where: { email:email } });
+        if (user) {
+          return res.status(401).json({ message: 'Email already in use' });
+        }
+
         await User.create({
             name: name,
             email: email,
             password: password
         })
-        const filePath = path.join(__dirname, '../public/user/home.html');
-        res.sendFile(filePath)
+        res.status(201).json({ message: 'Account Created Successfully' });
+    }
+    catch(err){
+        res.status(500).json({ message: 'Error Creating Account' });
+    }
+}
+
+exports.getLogin = (req,res,next) =>{
+    const filePath = path.join(__dirname, '../public/user/login.html');
+    res.sendFile(filePath)
+}
+
+exports.postLogin = async (req,res,next) =>{
+    try{
+        const {email, password} = req.body
+
+        const user = await User.findOne({where: {email:email}})
+
+        if(!user){
+            res.status(404).json({message: "User not found !"})
+        }
+
+        if (user.password == password){
+            res.status(200).json({message: "Succesfully logged in !"})
+        }
+        else{
+            res.status(401).json({message: "Incorrect Login Credentials"})
+        }
+
     }
     catch(err){
         console.log(err)
