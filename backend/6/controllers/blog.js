@@ -1,6 +1,6 @@
 const { redirect } = require('react-router');
 const Blog = require('../models/blog');
-const Comment = require('../models/comment'); // Import your Comment model
+const Comment = require('../models/comment');
 
 
 exports.getHome = (req,res,next) =>{
@@ -14,7 +14,7 @@ exports.postAddBlog = async (req,res,next) =>{
         author: req.body.author,
         content: req.body.content
         })
-    res.redirect('/blogs')
+    res.redirect('/')
     }
     catch(err){
         console.log(err)
@@ -24,9 +24,8 @@ exports.postAddBlog = async (req,res,next) =>{
 
 exports.getBlog = async (req, res, next) => {
     try {
-      // Find all blogs and include associated comments
       const blogs = await Blog.findAll({
-        include: Comment, // Include the Comment model
+        include: Comment,
       });
   
       res.render('blog/blogs', {
@@ -45,11 +44,11 @@ exports.postAddComment = async (req,res,next) =>{
       content: req.body.commentContent,
       postId: blogId
     })
-    res.redirect('/blogs')
+    res.redirect('/')
   }
   catch(err){
     console.log(err)
-    redirect('/blogs')
+    res.redirect('/')
   }
 }
 
@@ -61,11 +60,11 @@ exports.deleteComment = async (req,res,next) => {
         id : commentId
       }
     })
-    res.redirect('/blogs')
+    res.redirect('/')
   }
   catch(err){
     console.log(err)
-    redirect('/blogs')
+    redirect('/')
   }
 }
 
@@ -77,10 +76,10 @@ exports.deletePost = async (req,res,next) =>{
         id: postId
       }
     })
-    res.redirect('/blogs')
+    res.redirect('/')
   }
   catch(err){
     console.log(err)
-    redirect('/blogs')
+    redirect('/')
   }
 }

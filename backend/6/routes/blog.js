@@ -6,11 +6,11 @@ const router = express.Router()
 
 const blogController = require('../controllers/blog')
 
-router.get('/',blogController.getHome)
+router.get('/blogs/new',blogController.getHome)
 
-router.post('/create-blog',blogController.postAddBlog)
+router.post('/blogs/new',blogController.postAddBlog)
 
-router.get('/blogs',blogController.getBlog)
+router.get('/',blogController.getBlog)
 
 router.post('/add-comment/:blogId',blogController.postAddComment)
 
