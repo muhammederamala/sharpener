@@ -55,9 +55,7 @@ async function login(e){
 
         if(response.status === 200){
             console.log("Logged in succesfully")
-            const responseData = response.data;
-            responseMessageElement.textContent = responseData.message;
-            responseMessageElement.style.color = 'green';
+            window.location.href = response.data.redirectTo;
         }
         else{
             console.log("Error logging into account")

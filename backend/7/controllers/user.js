@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const path = require('path');
 const User = require('../models/user')
 
@@ -16,10 +18,12 @@ exports.postSignup = async (req,res,next) =>{
           return res.status(401).json({ message: 'Email already in use' });
         }
 
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         await User.create({
             name: name,
             email: email,
-            password: password
+            password: hashedPassword 
         })
         res.status(201).json({ message: 'Account Created Successfully' });
     }
@@ -43,8 +47,10 @@ exports.postLogin = async (req,res,next) =>{
             res.status(404).json({message: "User not found !"})
         }
 
-        if (user.password == password){
-            res.status(200).json({message: "Succesfully logged in !"})
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (passwordMatch){
+            res.status(200).json({message: "Succesfully logged in !",redirectTo: `/?userId=${user.id}`})
         }
         else{
             res.status(401).json({message: "Incorrect Login Credentials"})
