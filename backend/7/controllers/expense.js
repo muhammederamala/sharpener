@@ -2,7 +2,8 @@ const bcrypt = require('bcrypt');
 
 const path = require('path');
 const User = require('../models/user')
-const Expense = require('../models/expense')
+const Expense = require('../models/expense');
+const { redirect } = require('react-router');
 
 
 exports.getHome = async (req,res,next) =>{
@@ -15,10 +16,16 @@ exports.getHome = async (req,res,next) =>{
     }
 }
 
-exports.getAddExpense = (req,res,next) =>{
-    const filePath = path.join(__dirname, '../public/expense/add-expense.html');
-    res.sendFile(filePath)
+exports.getExpenseForm = async (req,res,next) =>{
+    try{
+        const filePath = path.join(__dirname, '../public/expense/add-expense.html');
+        res.sendFile(filePath)
+    }
+    catch(err){
+        console.log(err)
+    }
 }
+
 
 exports.postAddExpense = async (req,res,next) =>{
     try{
@@ -35,7 +42,7 @@ exports.postAddExpense = async (req,res,next) =>{
         })
         console.log(expenses)
 
-        res.json({redirectTo:`/?userId=${req.body.userId}`,expenses:expenses})
+        res.status(200).json({redirectTo:`/?userId=${req.body.userId}`,expenses:expenses})
     }
     catch(err){
         console.log(err)

@@ -8,11 +8,11 @@ const router = express.Router();
 
 router.get('/',expenseController.getHome)
 
-router.get('/add-expense',expenseController.getAddExpense)
-
 router.post('/add-expense',expenseController.postAddExpense)
 
 router.get('/load-expense',expenseController.loadExpense)
+
+router.get('/expense-form',expenseController.getExpenseForm)
 
 router.delete('/delete-expense',expenseController.deleteExpense)
 

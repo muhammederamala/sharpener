@@ -117,6 +117,7 @@ async function addExpense(e) {
             console.log("Expense added successfully");
 
             // Call the loadExpenses function to refresh the expense list
+            window.history.back(-1);
             loadExpenses();
         } else {
             console.log("Error")
@@ -129,32 +130,38 @@ async function addExpense(e) {
 
 async function deleteExpense(expenseId) {
     try{
-        const response = await axios.delete(`http://localhost:3000/delete-expense/?expenseId=${expenseId}`)
-        if(response.status === 200){
-            location.href = location.href;
-        }
-        else{
-            location.href = location.href;
-        }
+        await axios.delete(`http://localhost:3000/delete-expense/?expenseId=${expenseId}`)
+        window.location.reload();
+        loadExpenses();
     }
     catch(err){
         console.log(err)
     }
 }
 
-document.getElementById("expense-form").addEventListener("click", async function() {
+document.getElementById("expense-form").addEventListener("click", async function(e) {
+    e.preventDefault()
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('userId');
+    console.log(userId)
 
-    const currentURL = window.location.href;
-    const urlParams = new URLSearchParams(currentURL);
+    const newURL = `http://localhost:3000/expense-form?userId=${userId}`;
+    window.location.href = newURL;
+
+})
+
+document.getElementById("razor-pay").addEventListener("click", async function(e) {
+    e.preventDefault()
+    const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('userId');
 
-    const response = await axios.get(`http://localhost:3000/expense-form/?userId=${userId}`)
-    if(response.status === 200){
-        window.location.href = response.data.redirectTo;
-        console.log("Succesfull")
-    }
+    axios
+
+    const newURL = `http://localhost:3000/expense-form?userId=${userId}`;
+    window.location.href = newURL;
 
 })
 
 // Call loadExpenses when the page is loaded
 window.addEventListener('load', loadExpenses);
+
