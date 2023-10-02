@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const path = require('path');
 const User = require('../models/user')
@@ -29,15 +30,19 @@ exports.getExpenseForm = async (req,res,next) =>{
 
 exports.postAddExpense = async (req,res,next) =>{
     try{
+        const token = req.body.userId
+        const decodedData = decodeJwtToken(token);
+        const userId = decodedData.userId
+        console.log(decodedData)
         await Expense.create({
             name: req.body.name,
             amount: req.body.amount,
             category: req.body.category,
-            userId: req.body.userId
+            userId: userId
         })
         const expenses = await Expense.findAll({
             where:{
-                userId: req.body.userId
+                userId: decodedData
             }
         })
         console.log(expenses)
@@ -77,5 +82,16 @@ exports.deleteExpense = async (req,res,next) =>{
     }
     catch(err){
         console.log(err)
+    }
+}
+
+function decodeJwtToken(token) {
+    try {
+        const decodedToken = jwt.verify(token, 'your-secret-key'); // Replace 'your-secret-key' with your actual secret key
+        return decodedToken;
+    } catch (err) {
+        // Handle token verification error, e.g., if the token is invalid or expired
+        console.error('Error decoding token:', err);
+        return null;
     }
 }

@@ -102,8 +102,9 @@ async function addExpense(e) {
     try {
         e.preventDefault();
         console.log("Hello world")
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('userId');
+        // const urlParams = new URLSearchParams(window.location.search);
+        // const userId = urlParams.get('userId');
+        const userId = localStorage.getItem('Token');
 
         const expenseData = {
             name: e.target.name.value,
@@ -128,6 +129,18 @@ async function addExpense(e) {
     }
 }
 
+document.getElementById("expense-form").addEventListener("click", async function(e) {
+    e.preventDefault()
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const userId = urlParams.get('userId');
+    const userId = localStorage.getItem('Token');
+    console.log(userId)
+
+    const newURL = `http://localhost:3000/expense-form`;
+    window.location.href = newURL;
+
+})
+
 async function deleteExpense(expenseId) {
     try{
         await axios.delete(`http://localhost:3000/delete-expense/?expenseId=${expenseId}`)
@@ -139,28 +152,6 @@ async function deleteExpense(expenseId) {
     }
 }
 
-document.getElementById("expense-form").addEventListener("click", async function(e) {
-    e.preventDefault()
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('userId');
-    console.log(userId)
-
-    const newURL = `http://localhost:3000/expense-form?userId=${userId}`;
-    window.location.href = newURL;
-
-})
-
-document.getElementById("razor-pay").addEventListener("click", async function(e) {
-    e.preventDefault()
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('userId');
-
-    axios
-
-    const newURL = `http://localhost:3000/expense-form?userId=${userId}`;
-    window.location.href = newURL;
-
-})
 
 // Call loadExpenses when the page is loaded
 window.addEventListener('load', loadExpenses);

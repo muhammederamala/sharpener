@@ -55,6 +55,10 @@ async function login(e){
 
         if(response.status === 200){
             console.log("Logged in succesfully")
+            
+            const token = response.data.token;
+            localStorage.setItem('Token', token);
+
             window.location.href = response.data.redirectTo;
         }
         else{
