@@ -72,3 +72,27 @@ async function login(e){
         console.log(err)
     }
 }
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const resetPasswordForm = document.getElementById("reset-password-form");
+    const responseMessage = document.getElementById("response-message");
+
+    resetPasswordForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const email = document.getElementById("email").value;
+
+        // Send a POST request to your backend route with the email as the request body
+        axios
+            .post("/password/forgot-password", { email })
+            .then((response) => {
+                // Handle the response as needed, e.g., show a success message
+                responseMessage.textContent = response.data.message;
+            })
+            .catch((error) => {
+                // Handle errors, e.g., show an error message
+                responseMessage.textContent = "Error: " + error.response.data.message;
+            });
+    });
+});
