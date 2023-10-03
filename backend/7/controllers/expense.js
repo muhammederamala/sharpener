@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const sequelize = require('../util/database')
 
 const path = require('path');
 const User = require('../models/user')
@@ -30,6 +31,7 @@ exports.getExpenseForm = async (req,res,next) =>{
 
 exports.postAddExpense = async (req,res,next) =>{
     try{
+        const t = await sequelize.transaction()
         const token = req.body.userId
         const decodedData = decodeJwtToken(token);
         const userId = decodedData.userId
@@ -38,13 +40,16 @@ exports.postAddExpense = async (req,res,next) =>{
             amount: req.body.amount,
             category: req.body.category,
             userId: userId
-        })
+        },
+        {transaction : t}
+        )
 
         // Calculate the total expense for the user
         const totalExpenses = await Expense.sum('amount', {
             where: {
                 userId: userId,
             },
+            transaction :t,
         });
 
         // Update the User model with the calculated totalExpense
@@ -54,8 +59,11 @@ exports.postAddExpense = async (req,res,next) =>{
                 where: {
                     id: userId,
                 },
+                transaction :t,
             }
         );
+
+        await t.commit();
 
         const expenses = await Expense.findAll({
             where:{
@@ -68,6 +76,7 @@ exports.postAddExpense = async (req,res,next) =>{
     }
     catch(err){
         console.log(err)
+        await t.rollback();
         res.json({redirectTo:"/"})
     }
 }
@@ -90,11 +99,23 @@ exports.loadExpense = async (req,res,next) =>{
 exports.deleteExpense = async (req,res,next) =>{
     try{
         const expenseId = req.query.expenseId
+        const deletedExpense = await Expense.findByPk(expenseId);
+        const amount = deletedExpense.amount;
+        
         const response = await Expense.destroy({
             where:{
                 id: expenseId
             }
         })
+
+        const userId = deletedExpense.userId;
+        await User.decrement('totalExpense', {
+            by: amount,
+            where: {
+                id: userId
+            }
+        });
+
         res.status(200)
     }
     catch(err){
