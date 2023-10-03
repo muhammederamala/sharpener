@@ -8,8 +8,8 @@ module.exports = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({ message: 'Authentication failed' });
     }
-    const decoded = jwt.verify(token, 'your-secret-key'); // Replace with your actual secret key
-    const user = await User.findByPk(decoded.userId); // Replace with the method to find a user by ID
+    const decoded = jwt.verify(token, 'your-secret-key'); 
+    const user = await User.findByPk(decoded.userId); 
     if (!user) {
       return res.status(401).json({ message: 'Authentication failed' });
     }

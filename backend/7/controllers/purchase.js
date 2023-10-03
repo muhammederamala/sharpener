@@ -1,5 +1,8 @@
 const Razorpay = require('razorpay');
 const Order = require('../models/order');
+const User = require('../models/user');
+const Expense = require('../models/expense');
+const { Sequelize, Op } = require('sequelize');
 
 exports.purchasePremium = async (req, res, next) => {
     try {
@@ -44,5 +47,45 @@ exports.updateTransactionStatus = async (req, res, next) => {
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+};
+
+exports.checkPremium = async (req,res,next) =>{
+    try{
+        const order = await Order.findOne({where :{
+            userId:req.user.id
+        }})
+        let isPremiumUser = false
+        if (order && order.status === 'SUCCESSFUL'){
+            isPremiumUser = true
+        }
+        res.json({isPremiumUser })
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+exports.showLeaderboard = async (req, res, next) => {
+    try {
+        const users = await User.findAll({
+            attributes: [
+                'id',
+                'name',
+                'email',
+                [sequelize.fn('SUM', sequelize.col('expenses.amount')), 'totalExpenses']
+            ],
+            include: [{
+                model: Expense,
+                attributes: []
+            }],
+            group: ['User.id'],
+            order: [[sequelize.literal('totalExpenses'), 'DESC']]
+        });
+
+        res.json(users);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
