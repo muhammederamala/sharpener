@@ -2,7 +2,9 @@ const Razorpay = require('razorpay');
 const Order = require('../models/order');
 const User = require('../models/user');
 const Expense = require('../models/expense');
-const { Sequelize, Op } = require('sequelize');
+
+const sequelize = require('../util/database'); // Import Sequelize and sequelize
+const Sequelize = require('sequelize')
 
 exports.purchasePremium = async (req, res, next) => {
     try {
@@ -66,26 +68,38 @@ exports.checkPremium = async (req,res,next) =>{
     }
 }
 
+
 exports.showLeaderboard = async (req, res, next) => {
     try {
-        const users = await User.findAll({
-            attributes: [
-                'id',
-                'name',
-                'email',
-                [sequelize.fn('SUM', sequelize.col('expenses.amount')), 'totalExpenses']
-            ],
-            include: [{
-                model: Expense,
-                attributes: []
-            }],
-            group: ['User.id'],
-            order: [[sequelize.literal('totalExpenses'), 'DESC']]
+        // Find all users along with their associated expenses
+        const usersWithExpenses = await User.findAll({
+            attributes: ['id', 'email'],
+          include: [{
+            model: Expense,
+            as: 'expenses',
+            attributes: ['amount'], // Alias for the expenses association if you've defined one
+          }],
         });
 
-        res.json(users);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal Server Error' });
+        const usersWithTotalExpenses = usersWithExpenses.map(user => {
+            const totalExpenses = user.expenses.reduce((sum, expense) => sum + expense.amount, 0);
+            return {
+                id: user.id,
+                name: user.name,
+                email: user.email, // Include the user email
+                totalExpenses,
+            };
+        });
+
+          usersWithTotalExpenses.sort((a, b) => b.totalExpenses - a.totalExpenses);
+
+
+        console.log(usersWithExpenses)
+        
+        // Send the users data along with their expenses as a response
+        return res.json(usersWithTotalExpenses);
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 };

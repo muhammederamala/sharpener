@@ -70,7 +70,7 @@ async function showLeaderboard(token) {
         // Create <li> elements and append them to the <ul>
         data.forEach(user => {
             const listItem = document.createElement('li');
-            listItem.textContent = `Username: ${user.username}, Total Expenses: ${user.totalExpenses}`;
+            listItem.textContent = `Username: ${user.email}, Total Expenses: ${user.totalExpenses}`;
             userList.appendChild(listItem);
         });
     } catch (error) {
