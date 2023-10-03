@@ -70,10 +70,47 @@ async function showLeaderboard(token) {
         // Create <li> elements and append them to the <ul>
         data.forEach(user => {
             const listItem = document.createElement('li');
-            listItem.textContent = `Username: ${user.email}, Total Expenses: ${user.totalExpenses}`;
+            listItem.textContent = `Username: ${user.email}, Total Expenses: ${user.totalExpense}`;
             userList.appendChild(listItem);
         });
     } catch (error) {
         console.error("Error fetching and rendering user expenses:", error);
     }
 }
+
+// Attach the click event to a parent element (e.g., the document) using event delegation
+document.addEventListener("click", async function (e) {
+    const target = e.target;
+    if (target && target.id === "razor-pay") {
+        const token = localStorage.getItem("Token");
+        console.log("this is the token", token);
+        const response = await axios.get("http://localhost:3000/purchase/premium-membership", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        console.log(response);
+        var options = {
+            "key": response.data.key_id,
+            "order_id": response.data.order.id,
+            "handler": async function (response) {
+                await axios.post('http://localhost:3000/purchase/update-transaction-status', {
+                    order_id: options.order_id,
+                    payment_id: response.razorpay_payment_id,
+                }, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+                alert("You are now a premium user");
+            },
+        };
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+        e.preventDefault();
+        rzp1.on('payment failed', function (response) {
+            console.log(response);
+            alert("Something went wrong");
+        });
+    }
+  });

@@ -71,35 +71,19 @@ exports.checkPremium = async (req,res,next) =>{
 
 exports.showLeaderboard = async (req, res, next) => {
     try {
-        // Find all users along with their associated expenses
-        const usersWithExpenses = await User.findAll({
-            attributes: ['id', 'email'],
-          include: [{
-            model: Expense,
-            as: 'expenses',
-            attributes: ['amount'], // Alias for the expenses association if you've defined one
-          }],
+        // Find all users and order them by totalExpense in descending order
+        const usersWithTotalExpenses = await User.findAll({
+            attributes: ['id', 'name', 'email', 'totalExpense'],
+            order: [['totalExpense', 'DESC']],
         });
 
-        const usersWithTotalExpenses = usersWithExpenses.map(user => {
-            const totalExpenses = user.expenses.reduce((sum, expense) => sum + expense.amount, 0);
-            return {
-                id: user.id,
-                name: user.name,
-                email: user.email, // Include the user email
-                totalExpenses,
-            };
-        });
+        console.log(usersWithTotalExpenses);
 
-          usersWithTotalExpenses.sort((a, b) => b.totalExpenses - a.totalExpenses);
-
-
-        console.log(usersWithExpenses)
-        
-        // Send the users data along with their expenses as a response
+        // Send the users data along with their total expenses as a response
         return res.json(usersWithTotalExpenses);
-      } catch (error) {
+    } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+

@@ -33,13 +33,30 @@ exports.postAddExpense = async (req,res,next) =>{
         const token = req.body.userId
         const decodedData = decodeJwtToken(token);
         const userId = decodedData.userId
-        console.log(decodedData)
         await Expense.create({
             name: req.body.name,
             amount: req.body.amount,
             category: req.body.category,
             userId: userId
         })
+
+        // Calculate the total expense for the user
+        const totalExpenses = await Expense.sum('amount', {
+            where: {
+                userId: userId,
+            },
+        });
+
+        // Update the User model with the calculated totalExpense
+        await User.update(
+            { totalExpense: totalExpenses },
+            {
+                where: {
+                    id: userId,
+                },
+            }
+        );
+
         const expenses = await Expense.findAll({
             where:{
                 userId: decodedData
