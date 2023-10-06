@@ -74,6 +74,47 @@ async function login(e){
 }
 
 
+async function resetPassword(e) {
+    e.preventDefault()
+    // Get the values of the new password and confirm password fields
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    // Check if the passwords match
+    if (newPassword !== confirmPassword) {
+        alert('Passwords do not match. Please try again.');
+        return;
+    }
+
+    // Retrieve the 'passwordId' parameter from the URL query parameters
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const passwordId = urlSearchParams.get('passwordId'); // Assuming 'passwordId' is the parameter name in the URL
+
+    if (!passwordId) {
+        alert('No passwordId parameter found in the URL.');
+        return;
+    }
+
+    // Prepare the data to be sent in the POST request
+    console.log("this is the password",newPassword)
+    const requestData = {
+        id: passwordId, // Include the retrieved passwordId parameter
+        password: newPassword,
+    };
+
+    // Send the POST request to your backend
+    await axios.post(`http://localhost:3000/user/password/reset-password/${id}`, requestData)
+        .then((response) => {
+            // Handle success, e.g., show a success message
+        })
+        .catch((error) => {
+            // Handle error, e.g., show an error message
+            console.error('Password reset error:', error);
+            alert('An error occurred while resetting the password.');
+        });
+}
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const resetPasswordForm = document.getElementById("reset-password-form");
     const responseMessage = document.getElementById("response-message");
@@ -96,3 +137,4 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     });
 });
+
