@@ -84,12 +84,33 @@ exports.postAddExpense = async (req,res,next) =>{
 exports.loadExpense = async (req,res,next) =>{
     try{
         const userId = req.query.userId;
+        const page = req.query.page || 1;
+        const pageSize = 2
+
+        const offset = (page - 1) * pageSize;
+
         const expenses = await Expense.findAll({
             where:{
                 userId : userId
-            }
+            },
+            limit: pageSize,
+            offset: offset
         })
-        res.json({redirectTo:`/?userId=${req.body.userId}`,expenses:expenses})
+
+        const totalExpensesCount = await Expense.count({
+            where: {
+                userId: userId
+            }
+        });
+
+        const totalPages = Math.ceil(totalExpensesCount / pageSize);
+
+        res.json({
+            redirectTo:`/?userId=${req.query.userId}&page=${page}`,
+            expenses:expenses,
+            currentPage: page,
+            totalPages: totalPages
+        })
     }
     catch(err){
         console.log(err)

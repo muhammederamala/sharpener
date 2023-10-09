@@ -73,12 +73,16 @@ function createExpenseElement(expense) {
     return cardContainer;
 }
 
+
+let currentPage = 2;
+let totalPages = 1;
+const itemsPerPage = 10; // Adjust this to your desired page size
 // Function to load expenses (call when the page is reloaded)
-async function loadExpenses() {
+async function loadExpenses(currentPage) {
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get('userId');
-        const response = await axios.get(`http://localhost:3000/load-expense?userId=${userId}`);
+        const response = await axios.get(`http://localhost:3000/load-expense?userId=${userId}&page=${currentPage}`);
         if (response.status === 200) {
             const expensesContainer = document.querySelector('.expenses-box'); // Select the expenses container
 
@@ -89,6 +93,14 @@ async function loadExpenses() {
                 const expenseElement = createExpenseElement(expense);
                 expensesContainer.appendChild(expenseElement);
             });
+
+            // Update pagination controls
+            currentPage = response.data.page;
+            // Display Next and Previous buttons based on currentPage and response.data.pageCount
+            updatePaginationControls(currentPage, response.data.totalPages);
+
+            updateUrlWithPage(currentPage);
+
         } else {
             console.log("Error loading expenses");
         }
@@ -97,11 +109,62 @@ async function loadExpenses() {
     }
 }
 
+function updateUrlWithPage(pageNumber) {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('page', pageNumber) || currentPage;
+    console.log("this is the url params",pageNumber)
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.history.pushState({}, '', newUrl); // Update URL without reloading the page
+}
+
+function updatePaginationControls(currentPage, pageCount) {
+    const previousButton = document.getElementById('previous-button');
+    const nextButton = document.getElementById('next-button');
+
+    previousButton.disabled = currentPage === 1;
+    nextButton.disabled = currentPage === pageCount;
+
+    previousButton.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            updateUrlWithPage(currentPage); // Update URL when previous button is clicked
+        }
+    });
+
+    nextButton.addEventListener('click', () => {
+        if (currentPage < pageCount) {
+            currentPage++;
+            updateUrlWithPage(currentPage); // Update URL when next button is clicked
+        }
+    });
+}
+
+
+// Select the previous and next buttons by their IDs
+const previousButton = document.getElementById('previous-button');
+const nextButton = document.getElementById('next-button');
+
+// Add an event listener for the previous button
+previousButton.addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        loadExpenses(currentPage);
+    }
+});
+
+// Add an event listener for the next button
+nextButton.addEventListener('click', () => {
+    if (currentPage < totalPages) {
+        currentPage++;
+        loadExpenses(currentPage);
+    }
+});
+
+
 // Function to add an expense
 async function addExpense(e) {
     try {
         e.preventDefault();
-        console.log("Hello world")
         // const urlParams = new URLSearchParams(window.location.search);
         // const userId = urlParams.get('userId');
         const userId = localStorage.getItem('Token');
@@ -152,7 +215,20 @@ async function deleteExpense(expenseId) {
     }
 }
 
+document.getElementById("downloadHistory").addEventListener("click", async function(e){
+    e.preventDefault()
+    try{
+        const baseURL = window.location.protocol + '//' + window.location.host;
+        const newUrl = baseURL+'/report/recently-downloaded'
+        window.location.href = newUrl;
+    }
+    catch(err){
+        console.log(err)
+    }
+})
+
 
 // Call loadExpenses when the page is loaded
-window.addEventListener('load', loadExpenses);
-
+window.addEventListener('load', () => {
+    loadExpenses(currentPage);
+});

@@ -22,17 +22,25 @@
     <div id="user-list"></div>
     <br>
 
-    <div id="yearly-report-container">
-    <!-- Yearly Report Table will be generated here -->
+    <div>
+        <table id="monthlyReport" class="report-table">
+            <!-- Table contents will be inserted here -->
+        </table>
     </div>
-    <button id="download-yearly-report" class="btn btn-primary" style="display: none;">Download Yearly Report</button>
-    <!-- Monthly Report Table and Download Button -->
-    <div id="monthly-report-container">
-    <!-- Monthly Report Table will be generated here -->
+    
+    <div>
+        <table id="yearlyReport" class="report-table">
+            <!-- Table contents will be inserted here -->
+        </table>
     </div>
-    <button id="download-monthly-report" class="btn btn-primary" style="display: none;">Download Monthly Report</button>
-  
+
     <div class='expenses-box'>
+    </div>
+    <button id="downloadHistory" class="btn btn-primary">View recent downloads</button>
+
+    <div id="pagination">
+        <button id="previous-button">Previous</button>
+        <button id="next-button">Next</button>
     </div>
     
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

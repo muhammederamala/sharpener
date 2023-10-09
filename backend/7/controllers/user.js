@@ -54,7 +54,7 @@ exports.postLogin = async (req,res,next) =>{
             const token = jwt.sign({ userId: user.id }, 'your-secret-key', {
                 expiresIn: '1h',
             });
-            res.status(200).json({message: "Succesfully logged in !",redirectTo: `/?userId=${user.id}`,token: token})
+            res.status(200).json({message: "Succesfully logged in !",redirectTo: `/?userId=${user.id}&page=1`,token: token})
         }
         else{
             res.status(401).json({message: "Incorrect Login Credentials"})

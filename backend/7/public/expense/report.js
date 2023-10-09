@@ -1,137 +1,157 @@
-// Function to make an Axios request to the backend and retrieve user data
-function getUserData() {
-    return axios.get('/api/userdata'); // Replace '/api/userdata' with your actual backend endpoint
-}
+// Function to populate a table with data and column names
+async function populateTable(tableId, title, columnNames, data) {
+    const tableContainer = document.createElement("div");
 
-// Function to generate the yearly report table
-function generateYearlyReport(data) {
-    const yearlyReportTable = document.createElement('table');
-    yearlyReportTable.classList.add('table', 'table-bordered');
+    // Create a title for the table and apply CSS styling
+    const titleElement = document.createElement("h2");
+    titleElement.textContent = title;
+    titleElement.style.marginTop = "20px"; // Add margin-top
+    tableContainer.appendChild(titleElement);
 
-    // Create table headers
-    const tableHeaders = `
-      <thead>
-        <tr>
-          <th>Month</th>
-          <th>Income</th>
-          <th>Expense</th>
-          <th>Savings</th>
-        </tr>
-      </thead>
-    `;
+    if(title === 'Monthly Report'){
+        const downloadButton = document.createElement("button");
+        downloadButton.textContent = 'Download';
+        downloadButton.setAttribute('id', 'downloadMonthlyReportButton');
 
-    yearlyReportTable.innerHTML = tableHeaders;
+        downloadButton.style.backgroundColor = 'blue';
+        downloadButton.style.color = 'white';
+        downloadButton.style.border = 'none';
+        downloadButton.style.padding = '5px 10px';
+        downloadButton.style.cursor = 'pointer';
+        tableContainer.appendChild(downloadButton)
+    }
+    else if(title === 'Yearly Report'){
+        const downloadButton = document.createElement("button");
+        downloadButton.textContent = 'Download';
+        downloadButton.setAttribute('id', 'downloadYearlyReportButton');
 
-    // Create table body
-    const tableBody = document.createElement('tbody');
-    data.forEach((entry) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-        <td>${entry.month}</td>
-        <td>${entry.income}</td>
-        <td>${entry.expense}</td>
-        <td>${entry.income - entry.expense}</td>
-      `;
-        tableBody.appendChild(row);
+        downloadButton.style.backgroundColor = 'blue';
+        downloadButton.style.color = 'white';
+        downloadButton.style.border = 'none';
+        downloadButton.style.padding = '5px 10px';
+        downloadButton.style.cursor = 'pointer';
+        tableContainer.appendChild(downloadButton)
+    }
+
+    const table = document.createElement("table");
+    table.id = tableId;
+    table.className = "report-table";
+
+    // Create a table header row and apply CSS styling
+    const headerRow = table.insertRow();
+    columnNames.forEach((columnName) => {
+        const headerCell = document.createElement("th");
+        headerCell.textContent = columnName;
+        headerCell.style.backgroundColor = "#f2f2f2"; // Add background color to headers
+        headerCell.style.padding = "8px"; // Add padding to headers
+        headerRow.appendChild(headerCell);
     });
 
-    yearlyReportTable.appendChild(tableBody);
-
-    // Append the table to the desired container
-    const container = document.getElementById('yearly-report-container');
-    container.appendChild(yearlyReportTable);
-}
-
-// Function to generate the monthly report table
-function generateMonthlyReport(data) {
-    const monthlyReportTable = document.createElement('table');
-    monthlyReportTable.classList.add('table', 'table-bordered');
-
-    // Create table headers
-    const tableHeaders = `
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Description</th>
-          <th>Category</th>
-          <th>Income</th>
-          <th>Expense</th>
-        </tr>
-      </thead>
-    `;
-
-    monthlyReportTable.innerHTML = tableHeaders;
-
-    // Create table body
-    const tableBody = document.createElement('tbody');
-    data.forEach((entry) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-        <td>${entry.date}</td>
-        <td>${entry.description}</td>
-        <td>${entry.category}</td>
-        <td>${entry.income}</td>
-        <td>${entry.expense}</td>
-      `;
-        tableBody.appendChild(row);
-    });
-
-    monthlyReportTable.appendChild(tableBody);
-
-    // Append the table to the desired container
-    const container = document.getElementById('monthly-report-container');
-    container.appendChild(monthlyReportTable);
-}
-
-// Fetch user data and generate reports
-getUserData()
-    .then((response) => {
-        const userData = response.data;
-        generateYearlyReport(userData.yearlyData);
-        generateMonthlyReport(userData.monthlyData);
-
-        // Check if the user is premium before showing download buttons
-        if (userData.premium) {
-            document.getElementById('download-yearly-report').style.display = 'block';
-            document.getElementById('download-monthly-report').style.display = 'block';
+    // Loop through data and populate the table
+    for (const report of data) {
+        const row = table.insertRow();
+        for (const columnName of columnNames) {
+            const cell = row.insertCell();
+            cell.textContent = report[columnName.toLowerCase()]; // Assuming data keys match column names
+            cell.style.border = "1px solid #ddd"; // Add border to cells
+            cell.style.padding = "8px"; // Add padding to cells
         }
-    })
-    .catch((error) => {
-        console.error('Error fetching user data:', error);
-    });
+    }
 
-// Function to download a table as a CSV file
-function downloadCSV(tableId, fileName) {
-    const table = document.getElementById(tableId);
-    const rows = table.querySelectorAll('tr');
-    const csvData = [];
+    // Apply CSS styling to the table container
+    tableContainer.style.border = "1px solid #ddd"; // Add border to the table container
+    tableContainer.style.padding = "10px"; // Add padding to the table container
 
-    // Extract table data
-    rows.forEach((row) => {
-        const rowData = [];
-        const cells = row.querySelectorAll('td');
-        cells.forEach((cell) => {
-            rowData.push(cell.innerText);
-        });
-        csvData.push(rowData.join(','));
-    });
-
-    // Create a Blob containing the CSV data
-    const csvContent = csvData.join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-
-    // Create a download link and trigger the download
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = fileName;
-    link.click();
+    tableContainer.appendChild(table);
+    document.body.appendChild(tableContainer);
 }
 
-// Add click event listeners for download buttons
-document.getElementById('download-yearly-report').addEventListener('click', () => {
-    downloadCSV('yearly-report-container', 'yearly_report.csv');
-});
+// Function to make an Axios request to the backend and retrieve user data
+async function getUserData() {
+    const token = localStorage.getItem("Token");
+    console.log(token, "This is the user token");
 
-document.getElementById('download-monthly-report').addEventListener('click', () => {
-    downloadCSV('monthly-report-container', 'monthly_report.csv');
+    try {
+        const response = await axios.get('http://localhost:3000/report/get-all-reports', {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const responseData = response.data;
+        console.log("Response Data:", responseData);
+
+        // Define column names for your tables
+        const monthlyColumnNames = ["Name", "Category", "Amount"];
+        const yearlyColumnNames = ["Name", "Category", "Amount"];
+
+        // Populate the tables with the response data and column names
+        await populateTable('monthlyReport', 'Monthly Report', monthlyColumnNames, responseData.monthlyReport[0].expenses);
+        await populateTable('yearlyReport', 'Yearly Report', yearlyColumnNames, responseData.yearlyReport[0].expenses);
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+        // Handle the error, e.g., show an error message to the user
+    }
+}
+
+// Call getUserData when the page is loaded or in response to an event
+window.addEventListener('load', getUserData);
+
+// JavaScript code to handle report download
+// Add an event listener to a parent element that contains the download buttons
+document.body.addEventListener('click', async function (event) {
+    // Check if the clicked element is a download button with a specific id
+    if (event.target.id === 'downloadMonthlyReportButton') {
+        event.preventDefault(); // Prevent the default behavior of navigating to a new page
+
+        try {
+            const token = localStorage.getItem("Token");
+            const reportType = "monthly" // Get the report type from the button's data attribute
+
+            // Call the backend route to generate and upload the monthly or yearly CSV file based on reportType
+            const response = await axios.get('http://localhost:3000/report/upload-csv', {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                params: {
+                    reportType: reportType, // Use the report type from the button's data attribute
+                },
+            });
+
+            // Get the S3 URL for the uploaded CSV file from the response
+            const reportS3Url = response.data.reportUrl;
+
+            // Trigger the download of the CSV file
+            window.location.href = reportS3Url;
+        } catch (error) {
+            console.error(`Error downloading ${reportType} CSV:`, error);
+            // Handle the error, e.g., show an error message to the user
+        }
+    } else if (event.target.id === 'downloadYearlyReportButton') {
+        event.preventDefault(); // Prevent the default behavior of navigating to a new page
+
+        try {
+            const token = localStorage.getItem("Token");
+            const reportType = "yearly" // Get the report type from the button's data attribute
+
+            // Call the backend route to generate and upload the monthly or yearly CSV file based on reportType
+            const response = await axios.get('http://localhost:3000/report/upload-csv', {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                params: {
+                    reportType: reportType, // Use the report type from the button's data attribute
+                },
+            });
+
+            // Get the S3 URL for the uploaded CSV file from the response
+            const reportS3Url = response.data.reportUrl;
+
+            // Trigger the download of the CSV file
+            window.location.href = reportS3Url;
+        } catch (error) {
+            console.error(`Error downloading ${reportType} CSV:`, error);
+            // Handle the error, e.g., show an error message to the user
+        }
+    }
 });
