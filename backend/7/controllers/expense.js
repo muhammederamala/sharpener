@@ -85,7 +85,8 @@ exports.loadExpense = async (req,res,next) =>{
     try{
         const userId = req.query.userId;
         const page = req.query.page || 1;
-        const pageSize = 2
+        const pagesizedata = parseInt(req.query.pageSize)
+        const pageSize = pagesizedata || 5
 
         const offset = (page - 1) * pageSize;
 
@@ -103,6 +104,7 @@ exports.loadExpense = async (req,res,next) =>{
             }
         });
 
+        console.log("These are the expenses",expenses)
         const totalPages = Math.ceil(totalExpensesCount / pageSize);
 
         res.json({

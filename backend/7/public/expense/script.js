@@ -74,15 +74,14 @@ function createExpenseElement(expense) {
 }
 
 
-let currentPage = 2;
-let totalPages = 1;
-const itemsPerPage = 10; // Adjust this to your desired page size
 // Function to load expenses (call when the page is reloaded)
-async function loadExpenses(currentPage) {
+async function loadExpenses() {
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get('userId');
-        const response = await axios.get(`http://localhost:3000/load-expense?userId=${userId}&page=${currentPage}`);
+        const currentPage = urlParams.get('page')
+        const pageSize = parseInt(localStorage.getItem('pageSize'), 10);
+        const response = await axios.get(`http://localhost:3000/load-expense?userId=${userId}&page=${currentPage}&pageSize=${pageSize}`);
         if (response.status === 200) {
             const expensesContainer = document.querySelector('.expenses-box'); // Select the expenses container
 
@@ -94,13 +93,6 @@ async function loadExpenses(currentPage) {
                 expensesContainer.appendChild(expenseElement);
             });
 
-            // Update pagination controls
-            currentPage = response.data.page;
-            // Display Next and Previous buttons based on currentPage and response.data.pageCount
-            updatePaginationControls(currentPage, response.data.totalPages);
-
-            updateUrlWithPage(currentPage);
-
         } else {
             console.log("Error loading expenses");
         }
@@ -108,58 +100,34 @@ async function loadExpenses(currentPage) {
         console.log(err);
     }
 }
-
-function updateUrlWithPage(pageNumber) {
-    const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set('page', pageNumber) || currentPage;
-    console.log("this is the url params",pageNumber)
-    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    window.history.pushState({}, '', newUrl); // Update URL without reloading the page
+const urlParams = new URLSearchParams(window.location.search);
+let currentPage = urlParams.get('page')
+if (currentPage === undefined) {
+    let currentPage = 1; // Initialize currentPage only if it's not already set
+}
+// Function to handle "Next" button click
+function handleNextButtonClick() {
+        currentPage++;
+        window.location.href = `http://localhost:3000/?userId=1&page=${currentPage}`;
+    
 }
 
-function updatePaginationControls(currentPage, pageCount) {
-    const previousButton = document.getElementById('previous-button');
-    const nextButton = document.getElementById('next-button');
-
-    previousButton.disabled = currentPage === 1;
-    nextButton.disabled = currentPage === pageCount;
-
-    previousButton.addEventListener('click', () => {
-        if (currentPage > 1) {
-            currentPage--;
-            updateUrlWithPage(currentPage); // Update URL when previous button is clicked
-        }
-    });
-
-    nextButton.addEventListener('click', () => {
-        if (currentPage < pageCount) {
-            currentPage++;
-            updateUrlWithPage(currentPage); // Update URL when next button is clicked
-        }
-    });
+// Function to handle "Previous" button click
+function handlePreviousButtonClick() {
+    currentPage--;
+    window.location.href = `http://localhost:3000/?userId=1&page=${currentPage}`;
 }
 
-
-// Select the previous and next buttons by their IDs
 const previousButton = document.getElementById('previous-button');
 const nextButton = document.getElementById('next-button');
 
-// Add an event listener for the previous button
-previousButton.addEventListener('click', () => {
-    if (currentPage > 1) {
-        currentPage--;
-        loadExpenses(currentPage);
-    }
-});
+previousButton.addEventListener('click', handlePreviousButtonClick);
+nextButton.addEventListener('click', handleNextButtonClick);
 
-// Add an event listener for the next button
-nextButton.addEventListener('click', () => {
-    if (currentPage < totalPages) {
-        currentPage++;
-        loadExpenses(currentPage);
-    }
-});
-
+document.getElementById("page-size-select").addEventListener('change',async function(){
+    const pageSize = document.getElementById("page-size-select").value;
+    localStorage.setItem("pageSize",pageSize)
+})
 
 // Function to add an expense
 async function addExpense(e) {

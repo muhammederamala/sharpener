@@ -6,7 +6,7 @@
     <title>Expense Tracker</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
+<body style="padding: 50px;">
     <h1>Expense Tracker</h1>
     
     <!-- Add Expense Button -->
@@ -37,10 +37,17 @@
     <div class='expenses-box'>
     </div>
     <button id="downloadHistory" class="btn btn-primary">View recent downloads</button>
-
+    <br><br>
     <div id="pagination">
         <button id="previous-button">Previous</button>
         <button id="next-button">Next</button>
+        <label for="page-size-select">Page Size:</label>
+        <select id="page-size-select">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <!-- Add more options as needed -->
+        </select>
     </div>
     
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
