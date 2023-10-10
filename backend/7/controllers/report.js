@@ -221,8 +221,6 @@ exports.uploadCSV = async (req, res) => {
             userId:userId
         })
 
-        console.log("This is the monthly report location",response.Location)
-
         // Respond with success
         res.status(200).json({
             reportUrl: response.Location,

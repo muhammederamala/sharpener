@@ -127,6 +127,7 @@ nextButton.addEventListener('click', handleNextButtonClick);
 document.getElementById("page-size-select").addEventListener('change',async function(){
     const pageSize = document.getElementById("page-size-select").value;
     localStorage.setItem("pageSize",pageSize)
+    window.location.reload();
 })
 
 // Function to add an expense

@@ -1,8 +1,11 @@
 const path = require('path')
 require('dotenv').config();
+const fs = require('fs')
 
 const express = require('express')
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
+const morgan = require('morgan')
 
 const userRoutes = require('./routes/signup');
 const expenseRoutes = require('./routes/expense')
@@ -18,8 +21,14 @@ const File = require('./models/files')
 
 const app = express();
 
+const accessLogStream = fs.createWriteStream(path.join(__dirname,'access.log'), 
+{flags: 'a'}
+);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(helmet());
+app.use(morgan('combined',{stream : accessLogStream}));
 
 app.use(express.static('public'));
 
@@ -39,5 +48,5 @@ File.belongsTo(User)
 
 sequelize.sync()
 .then(() =>{
-    app.listen(3000)
+    app.listen(process.env.PORT || 3000)
 })

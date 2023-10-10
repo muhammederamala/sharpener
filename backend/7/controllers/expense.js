@@ -104,7 +104,6 @@ exports.loadExpense = async (req,res,next) =>{
             }
         });
 
-        console.log("These are the expenses",expenses)
         const totalPages = Math.ceil(totalExpensesCount / pageSize);
 
         res.json({
