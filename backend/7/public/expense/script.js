@@ -81,7 +81,9 @@ async function loadExpenses() {
         const userId = urlParams.get('userId');
         const currentPage = urlParams.get('page')
         const pageSize = parseInt(localStorage.getItem('pageSize'), 10);
-        const response = await axios.get(`http://localhost:3000/load-expense?userId=${userId}&page=${currentPage}&pageSize=${pageSize}`);
+        const baseURL = window.location.protocol + '//' + window.location.host;
+
+        const response = await axios.get(`${baseURL}/load-expense?userId=${userId}&page=${currentPage}&pageSize=${pageSize}`);
         if (response.status === 200) {
             const expensesContainer = document.querySelector('.expenses-box'); // Select the expenses container
 
@@ -107,15 +109,17 @@ if (currentPage === undefined) {
 }
 // Function to handle "Next" button click
 function handleNextButtonClick() {
+    const baseURL = window.location.protocol + '//' + window.location.host;
         currentPage++;
-        window.location.href = `http://localhost:3000/?userId=1&page=${currentPage}`;
+        window.location.href = `${baseURL}/?userId=1&page=${currentPage}`;
     
 }
 
 // Function to handle "Previous" button click
 function handlePreviousButtonClick() {
+    const baseURL = window.location.protocol + '//' + window.location.host;
     currentPage--;
-    window.location.href = `http://localhost:3000/?userId=1&page=${currentPage}`;
+    window.location.href = `${baseURL}/?userId=1&page=${currentPage}`;
 }
 
 const previousButton = document.getElementById('previous-button');
@@ -137,6 +141,7 @@ async function addExpense(e) {
         // const urlParams = new URLSearchParams(window.location.search);
         // const userId = urlParams.get('userId');
         const userId = localStorage.getItem('Token');
+        const baseURL = window.location.protocol + '//' + window.location.host;
 
         const expenseData = {
             name: e.target.name.value,
@@ -145,7 +150,7 @@ async function addExpense(e) {
             userId: userId
         }
 
-        const response = await axios.post('http://localhost:3000/add-expense', expenseData)
+        const response = await axios.post(`${baseURL}/add-expense`, expenseData)
         if (response.status === 200) {
             console.log("Expense added successfully");
 
@@ -166,16 +171,17 @@ document.getElementById("expense-form").addEventListener("click", async function
     // const urlParams = new URLSearchParams(window.location.search);
     // const userId = urlParams.get('userId');
     const userId = localStorage.getItem('Token');
-    console.log(userId)
+    const baseURL = window.location.protocol + '//' + window.location.host;
 
-    const newURL = `http://localhost:3000/expense-form`;
+    const newURL = `${baseURL}/expense-form`;
     window.location.href = newURL;
 
 })
 
 async function deleteExpense(expenseId) {
     try{
-        await axios.delete(`http://localhost:3000/delete-expense/?expenseId=${expenseId}`)
+        const baseURL = window.location.protocol + '//' + window.location.host;
+        await axios.delete(`${baseURL}/delete-expense/?expenseId=${expenseId}`)
         window.location.reload();
         loadExpenses();
     }

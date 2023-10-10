@@ -16,7 +16,8 @@ async function signup(e){
             password: e.target.password.value
         }
         console.log(signUpDetails)
-        const response = await axios.post('http://localhost:3000/user/signup',
+        const baseURL = window.location.protocol + '//' + window.location.host;
+        const response = await axios.post(`${baseURL}/user/signup`,
         signUpDetails)
 
         const responseMessageElement = document.getElementById('response-message');
@@ -42,13 +43,14 @@ async function signup(e){
 async function login(e){
     try{
         e.preventDefault()
+        const baseURL = window.location.protocol + '//' + window.location.host;
 
         const loginDetails = {
             email: e.target.email.value,
             password: e.target.password.value
         }
 
-        const response = await axios.post("http://localhost:3000/user/login",
+        const response = await axios.post(`${baseURL}/user/login`,
         loginDetails)
         
         const responseMessageElement = document.getElementById('response-message');
@@ -101,9 +103,10 @@ async function resetPassword(e) {
         id: passwordId, // Include the retrieved passwordId parameter
         password: newPassword,
     };
+    const baseURL = window.location.protocol + '//' + window.location.host;
 
     // Send the POST request to your backend
-    await axios.post(`http://localhost:3000/user/password/reset-password/${id}`, requestData)
+    await axios.post(`${baseURL}/user/password/reset-password/${id}`, requestData)
         .then((response) => {
             // Handle success, e.g., show a success message
         })

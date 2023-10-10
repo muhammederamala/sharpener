@@ -147,7 +147,7 @@ exports.deleteExpense = async (req,res,next) =>{
 
 function decodeJwtToken(token) {
     try {
-        const decodedToken = jwt.verify(token, 'your-secret-key'); // Replace 'your-secret-key' with your actual secret key
+        const decodedToken = jwt.verify(token,  process.env.TOKEN_SECRET); // Replace 'your-secret-key' with your actual secret key
         return decodedToken;
     } catch (err) {
         // Handle token verification error, e.g., if the token is invalid or expired

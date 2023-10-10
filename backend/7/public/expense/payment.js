@@ -2,8 +2,10 @@
 async function checkPremiumUser() {
     try {
         const token = localStorage.getItem('Token');
+        const baseURL = window.location.protocol + '//' + window.location.host;
+
         // Make an API call to check the user's premium status
-        const response = await axios.get('http://localhost:3000/purchase/check-premium', {
+        const response = await axios.get(`${baseURL}/purchase/check-premium`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -45,8 +47,9 @@ checkPremiumUser();
 // Function to fetch data from the API and create <li> elements
 async function showLeaderboard(token) {
     try {
+        const baseURL = window.location.protocol + '//' + window.location.host;
         // Make a GET request to your API endpoint
-        const response = await fetch('http://localhost:3000/purchase/show-leaderboard', {
+        const response = await fetch(`${baseURL}/purchase/show-leaderboard`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -83,8 +86,10 @@ document.addEventListener("click", async function (e) {
     const target = e.target;
     if (target && target.id === "razor-pay") {
         const token = localStorage.getItem("Token");
+        const baseURL = window.location.protocol + '//' + window.location.host;
+
         console.log("this is the token", token);
-        const response = await axios.get("http://localhost:3000/purchase/premium-membership", {
+        const response = await axios.get(`${baseURL}/purchase/premium-membership`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -94,7 +99,7 @@ document.addEventListener("click", async function (e) {
             "key": response.data.key_id,
             "order_id": response.data.order.id,
             "handler": async function (response) {
-                await axios.post('http://localhost:3000/purchase/update-transaction-status', {
+                await axios.post(`${baseURL}/purchase/update-transaction-status`, {
                     order_id: options.order_id,
                     payment_id: response.razorpay_payment_id,
                 }, {

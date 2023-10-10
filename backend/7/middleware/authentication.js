@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({ message: 'Authentication failed' });
     }
-    const decoded = jwt.verify(token, 'your-secret-key'); 
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET); 
     const user = await User.findByPk(decoded.userId); 
     if (!user) {
       return res.status(401).json({ message: 'Authentication failed' });

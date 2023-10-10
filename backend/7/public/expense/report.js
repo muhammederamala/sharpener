@@ -70,9 +70,10 @@ async function populateTable(tableId, title, columnNames, data) {
 async function getUserData() {
     const token = localStorage.getItem("Token");
     console.log(token, "This is the user token");
+    const baseURL = window.location.protocol + '//' + window.location.host;
 
     try {
-        const response = await axios.get('http://localhost:3000/report/get-all-reports', {
+        const response = await axios.get(`${baseURL}/report/get-all-reports`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -107,9 +108,10 @@ document.body.addEventListener('click', async function (event) {
         try {
             const token = localStorage.getItem("Token");
             const reportType = "monthly" // Get the report type from the button's data attribute
+            const baseURL = window.location.protocol + '//' + window.location.host;
 
             // Call the backend route to generate and upload the monthly or yearly CSV file based on reportType
-            const response = await axios.get('http://localhost:3000/report/upload-csv', {
+            const response = await axios.get(`${baseURL}/report/upload-csv`, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 },
@@ -133,9 +135,10 @@ document.body.addEventListener('click', async function (event) {
         try {
             const token = localStorage.getItem("Token");
             const reportType = "yearly" // Get the report type from the button's data attribute
+            const baseURL = window.location.protocol + '//' + window.location.host;
 
             // Call the backend route to generate and upload the monthly or yearly CSV file based on reportType
-            const response = await axios.get('http://localhost:3000/report/upload-csv', {
+            const response = await axios.get(`${baseURL}/report/upload-csv`, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 },

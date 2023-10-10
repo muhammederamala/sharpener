@@ -1,8 +1,9 @@
 async function getAllDownloads (){
 
     const token = localStorage.getItem("Token")
-
-    const response = await axios.get('http://localhost:3000/report/get-recently-downloaded',{
+    const baseURL = window.location.protocol + '//' + window.location.host;
+    
+    const response = await axios.get(`${baseURL}/report/get-recently-downloaded`,{
         headers:{
             "Authorization":`Bearer ${token}`
         }

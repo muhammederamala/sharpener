@@ -1,6 +1,7 @@
-const path = require('path')
+const path = require('path');
 require('dotenv').config();
-const fs = require('fs')
+const fs = require('fs');
+const https = require('https');
 
 const express = require('express')
 const bodyParser = require('body-parser');
@@ -19,6 +20,9 @@ const Order = require('./models/order');
 const Password = require('./models/password');
 const File = require('./models/files')
 
+const privateKey = fs.readFileSync('server.key');
+const certificate = fs.readFileSync('server.cert')
+
 const app = express();
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname,'access.log'), 
@@ -27,8 +31,8 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname,'access.log'),
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(helmet());
-app.use(morgan('combined',{stream : accessLogStream}));
+// app.use(helmet());
+// app.use(morgan('combined',{stream : accessLogStream}));
 
 app.use(express.static('public'));
 
@@ -48,5 +52,10 @@ File.belongsTo(User)
 
 sequelize.sync()
 .then(() =>{
+    // https.createServer({key:privateKey, cert:certificate},app)
+    // .listen(process.env.PORT || 3000)
     app.listen(process.env.PORT || 3000)
+})
+.catch(err =>{
+    console.log(err)
 })
