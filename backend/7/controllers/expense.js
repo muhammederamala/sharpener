@@ -5,7 +5,6 @@ const sequelize = require('../util/database')
 const path = require('path');
 const User = require('../models/user')
 const Expense = require('../models/expense');
-const { redirect } = require('react-router');
 
 
 exports.getHome = async (req,res,next) =>{

@@ -3,7 +3,7 @@ const Order = require('../models/order');
 const User = require('../models/user');
 const Expense = require('../models/expense');
 
-const sequelize = require('../util/database'); // Import Sequelize and sequelize
+const sequelize = require('../util/database');
 const Sequelize = require('sequelize')
 
 exports.purchasePremium = async (req, res, next) => {
@@ -57,6 +57,7 @@ exports.checkPremium = async (req,res,next) =>{
         const order = await Order.findOne({where :{
             userId:req.user.id
         }})
+        console.log("this is the status",order.status)
         let isPremiumUser = false
         if (order && order.status === 'SUCCESSFUL'){
             isPremiumUser = true
