@@ -1,2 +1,0 @@
-key id : rzp_test_HmklvzMIOzKTZV,
-key secret : 8srsmo9XLu3PSICLVTJnPAIj
