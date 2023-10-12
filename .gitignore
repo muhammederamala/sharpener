@@ -1,0 +1,4 @@
+backend/7/.env
+backend/7/server.cert
+backend/7/server.key
+backend/7/expensetracker.pem

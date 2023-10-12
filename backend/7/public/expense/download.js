@@ -1,17 +1,15 @@
-async function getAllDownloads (){
-
-    const token = localStorage.getItem("Token")
+async function getAllDownloads() {
+    const token = localStorage.getItem("Token");
     const baseURL = window.location.protocol + '//' + window.location.host;
-    
-    const response = await axios.get(`${baseURL}/report/get-recently-downloaded`,{
-        headers:{
-            "Authorization":`Bearer ${token}`
-        }
-    })
-    console.log(response.data)
-    const downloadData = response.data
 
-    const container = document.getElementById('download-list')
+    const response = await axios.get(`${baseURL}/report/get-recently-downloaded`, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    const downloadData = response.data;
+    const tableBody = document.getElementById('download-list');
 
     function formatDate(dateString) {
         const date = new Date(dateString);
@@ -21,34 +19,36 @@ async function getAllDownloads (){
         return `${day}/${month}/${year}`;
     }
 
-    // Iterate over the download data and create a box for each entry
-    downloadData.forEach((download, index) => {
-        // Create a container div for the download box
-        const downloadBox = document.createElement('div');
-        downloadBox.className = 'download-box'; // You can add CSS class for styling
+    // Iterate over the download data and populate the table
+    downloadData.forEach(download => {
+        const row = document.createElement('tr');
 
-        // Create elements for displaying download information
-        const dateElement = document.createElement('p');
+        // Create table data for Date
+        const dateCell = document.createElement('td');
         const formattedDate = formatDate(download.createdAt);
-        dateElement.textContent = `Date: ${formattedDate}`;
+        dateCell.textContent = formattedDate;
 
-        const typeElement = document.createElement('p');
-        typeElement.textContent = `Type: ${download.type}`;
+        // Create table data for Type
+        const typeCell = document.createElement('td');
+        typeCell.textContent = download.type;
 
-        // Create a link element for downloading the file
-        const downloadLink = document.createElement('a');
-        downloadLink.textContent = 'Download';
-        downloadLink.href = download.link;
-        downloadLink.target = '_blank'; // Open the link in a new tab
+        // Create table data for the Download button
+        const actionCell = document.createElement('td');
+        const downloadButton = document.createElement('a');
+        downloadButton.textContent = 'Download';
+        downloadButton.href = download.link;
+        downloadButton.target = '_blank'; // Open the link in a new tab
 
-        // Append the elements to the download box container
-        downloadBox.appendChild(dateElement);
-        downloadBox.appendChild(typeElement);
-        downloadBox.appendChild(downloadLink);
+        // Append table data to the row
+        row.appendChild(dateCell);
+        row.appendChild(typeCell);
+        actionCell.appendChild(downloadButton);
+        row.appendChild(actionCell);
 
-        // Append the download box to the container
-        container.appendChild(downloadBox);
+        // Append the row to the table body
+        tableBody.appendChild(row);
     });
 }
 
-getAllDownloads()
+// Call the function to load and populate the table
+getAllDownloads();
