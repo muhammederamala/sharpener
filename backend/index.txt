@@ -5,3 +5,4 @@
 5. chat app
 6. Node project test , create a blog website
 7. Expense tracker along with AWS
+8. Type script
