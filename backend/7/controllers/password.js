@@ -1,5 +1,6 @@
 const path = require('path');
 const brevo = require('@getbrevo/brevo');
+var SibApiV3Sdk = require('sib-api-v3-sdk');
 const bcrypt = require('bcrypt');
 
 const { v4: uuidv4 } = require('uuid');
@@ -34,13 +35,14 @@ exports.sendEmail = async (req, res) => {
         let apiInstance = new brevo.TransactionalEmailsApi();
         let sendSmtpEmail = new brevo.SendSmtpEmail();
         
-        const { email } = req.body;
+        const email = req.body.email;
+        const baseUrl = req.body.baseURL
 
-        const resetURL = `http://localhost:3000/user/password/reset-password/?passwordId=${passwordId}`;
+        const resetURL = `${baseUrl}/user/password/reset-password/?passwordId=${passwordId}`;
 
         sendSmtpEmail.subject = "password reset";
         sendSmtpEmail.htmlContent = `<html><body><h1>Click the link below to reset your password:</h1><a href="${resetURL}">${resetURL}</a></body></html>`;
-        sendSmtpEmail.sender = { "name": "John", "email": "muhammederamala15@gmail.com.com" };
+        sendSmtpEmail.sender = { "name": "John", "email": "muhammederamala15@gmail.com" };
         sendSmtpEmail.to = [
         { "email": email, "name": "sample-name" }
         ];
