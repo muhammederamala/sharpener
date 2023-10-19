@@ -43,3 +43,37 @@ exports.getLogin = (req,res,next) =>{
     const filePath = path.join(__dirname, '../public/user/login.html');
     res.sendFile(filePath)
 }
+
+exports.postLogin = async (req,res,next) =>{
+    try{
+        const {email,password} = req.body;
+
+        const user = await User.findOne({
+            where:{
+                email:email
+            }
+        })
+
+        if(!user){
+            res.status(404).json({message:"User Not Found!"})
+        }
+
+        const passwordMatch = await bcrypt.compare(password,user.password)
+
+        if(passwordMatch){
+            const token = jwt.sign({userId:user.id},process.env.TOKEN_SECRET_KEY,{
+                expiresIn:'20h',
+            });
+            res.status(200).json({
+                message: "Succesfully logged in !",
+                token: token
+            });
+        }
+        else{
+            res.status(401).json({message: "Incorrect Login Credentials"})
+        }
+    }
+    catch(err){
+        console.log(err)
+    }
+}

@@ -21,7 +21,7 @@ async function signup(e){
             // responseMessageElement.textContent = responseData.message;
             // responseMessageElement.style.color = 'green';
             // To navigate to a new URL
-            window.location.href = `${baseURL}/user/login`; // Replace with the desired URL
+            window.location.href = `${baseURL}/user/login`;
         }
         else{
             console.log("Error in creating account")
@@ -54,7 +54,7 @@ async function login(e){
             const token = response.data.token;
             localStorage.setItem('Token', token);
 
-            window.location.href = response.data.redirectTo;
+            window.location.href = `${baseURL}/`;
         }
         else{
             console.log("Error logging into account")
