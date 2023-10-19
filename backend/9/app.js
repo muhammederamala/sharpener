@@ -1,5 +1,6 @@
 const path = require('path');
 require('dotenv').config();
+const cors = require('cors')
 
 const express = require('express')
 const bodyParser = require('body-parser');
@@ -12,7 +13,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/user',userRoutes)
 const sequelize = require('./util/database');
