@@ -13,25 +13,74 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Call fetchAndRenderAllMessages when the page loads
+    fetchAndRenderAllMessages();
+
+    function fetchAndRenderAllMessages() {
+        // Assuming you have a user ID and token stored in local storage
+        const token = localStorage.getItem("Token");
+
+        // Make an Axios GET request to fetch all messages
+        const baseURL = window.location.protocol + '//' + window.location.host;
+        axios.get(`${baseURL}/get-all-messages`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => {
+            // Handle the response and render the messages
+            const messages = response.data.messages;
+            messages.forEach((message) => {
+                appendMessage(message.sender, message.text);
+            });
+        })
+        .catch((error) => {
+            // Handle errors, e.g., show an error message
+            console.error("Error fetching messages:", error);
+        });
+    }
+
     function sendMessage() {
         const messageText = messageInput.value;
         if (messageText.trim() !== "") {
             appendMessage("sender", messageText);
             messageInput.value = "";
+
+            // Assuming you have a user ID and token stored in local storage
+            const token = localStorage.getItem("Token");
+
+            // Create a payload with the message and user ID
+            const payload = {
+                message: messageText,
+                token: token,
+            };
+
+            // Make an Axios POST request with the payload and token
+            const baseURL = window.location.protocol + '//' + window.location.host;
+            axios.post(`${baseURL}/send-message`, payload, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then((response) => {
+                // Handle the response, e.g., show a success message
+                console.log("Message sent successfully.");
+            })
+            .catch((error) => {
+                // Handle errors, e.g., show an error message
+                console.error("Error sending message:", error);
+            });
         }
     }
 
-    function appendMessage(sender, text) {
+    function appendMessage(senderName, text) {
         const message = document.createElement("div");
-        message.className = `message ${sender}`;
-        if (sender === "sender") {
-            message.textContent = `You: ${text}`;
-        } else {
-            message.textContent = text;
-        }
+        message.className = `message ${senderName}`;
+        message.textContent = `${senderName}: ${text}`;
         chatBox.appendChild(message);
-
+    
         // Scroll to the bottom of the chat box
         chatBox.scrollTop = chatBox.scrollHeight;
     }
+    
 });
