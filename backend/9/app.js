@@ -5,7 +5,8 @@ const cors = require('cors')
 const express = require('express')
 const bodyParser = require('body-parser');
 
-const userRoutes = require('./routes/user')
+const userRoutes = require('./routes/user');
+const chatRoutes = require('./routes/chat');
 
 const User = require('./models/user')
 
@@ -16,6 +17,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/user',userRoutes)
+app.use('/',chatRoutes)
 const sequelize = require('./util/database');
 
 sequelize.sync()
