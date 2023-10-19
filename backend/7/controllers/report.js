@@ -87,7 +87,6 @@ async function getMonthlyReport(userId) {
 exports.getAllReports = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        console.log(userId, "this is the user in report");
 
         // Find the user's username
         const user = await User.findOne({
@@ -95,7 +94,6 @@ exports.getAllReports = async (req, res, next) => {
                 id: userId,
             },
         });
-        console.log("This is the user",user)
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -112,7 +110,6 @@ exports.getAllReports = async (req, res, next) => {
 
 
         // Return the JSON object
-        console.log("This is the report response returned",reports)
         return res.status(200).json(reports);
 
     } catch (err) {
