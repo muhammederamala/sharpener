@@ -16,6 +16,35 @@ document.addEventListener("DOMContentLoaded", function () {
     // Call fetchAndRenderAllMessages when the page loads
     fetchAndRenderAllMessages();
 
+    setInterval(fetchAndRenderNewMessages, 2000);
+
+    function fetchAndRenderNewMessages() {
+        // Assuming you have a user ID and token stored in local storage
+        const token = localStorage.getItem("Token");
+
+        // Make an Axios GET request to fetch new messages
+        const baseURL = window.location.protocol + '//' + window.location.host;
+        axios.get(`${baseURL}/get-all-messages`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => {
+            const newMessages = response.data.messages;
+
+            chatBox.innerHTML = "";
+
+            // Render only the new messages
+            newMessages.forEach((message) => {
+                appendMessage(message.sender, message.text);
+            });
+        })
+        .catch((error) => {
+            // Handle errors, e.g., show an error message
+            console.error("Error fetching new messages:", error);
+        });
+    }
+
     function fetchAndRenderAllMessages() {
         // Assuming you have a user ID and token stored in local storage
         const token = localStorage.getItem("Token");
@@ -82,6 +111,5 @@ document.addEventListener("DOMContentLoaded", function () {
         // Scroll to the bottom of the chat box
         chatBox.scrollTop = chatBox.scrollHeight;
     }
-    
     
 });
