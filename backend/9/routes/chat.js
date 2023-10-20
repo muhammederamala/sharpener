@@ -11,6 +11,8 @@ router.get('/',chatController.getHome)
 
 router.post('/send-message',authenticationMiddleware,chatController.postSendMessage)
 
-router.get('/get-all-messages',authenticationMiddleware,chatController.getAllMessage)
+router.get('/get-all-messages',authenticationMiddleware,chatController.getAllMessages)
+
+router.get('/get-new-messages',authenticationMiddleware,chatController.getNewMessage)
 
 module.exports = router

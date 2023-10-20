@@ -37,7 +37,7 @@ exports.postSendMessage = async (req,res,next) =>{
     }
 }
 
-exports.getAllMessage = async (req, res, next) => {
+exports.getNewMessage = async (req, res, next) => {
     try {
         const userId = req.user.id;
         const lastMessageId = req.query.lastMessageId; // Get the last message ID from the query parameter
@@ -53,6 +53,28 @@ exports.getAllMessage = async (req, res, next) => {
         const messagesWithSender = messages.map((message) => {
             const senderName = message.userId === userId ? "You" : message.name;
             return {
+                id:message.id,
+                message: message.message,
+                name: senderName,
+            };
+        });
+
+        res.json({ messages: messagesWithSender });
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+exports.getAllMessages = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        let messages = await Message.findAll();
+
+        // Map the messages to create a new array with sender information
+        const messagesWithSender = messages.map((message) => {
+            const senderName = message.userId === userId ? "You" : message.name;
+            return {
+                id: message.id,
                 text: message.message,
                 sender: senderName,
             };
@@ -63,5 +85,6 @@ exports.getAllMessage = async (req, res, next) => {
         console.log(err);
     }
 };
+
 
 

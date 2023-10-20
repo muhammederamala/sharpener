@@ -10,6 +10,8 @@ const chatRoutes = require('./routes/chat');
 
 const User = require('./models/user')
 const Message = require('./models/message')
+const Group = require('./models/groups')
+const Member = require('./models/groupMembers')
 
 const app = express();
 
@@ -21,8 +23,8 @@ app.use('/user',userRoutes)
 app.use('/',chatRoutes)
 const sequelize = require('./util/database');
 
-User.hasMany(Message);
-Message.belongsTo(User);
+// User.hasMany(Message);
+// Message.belongsTo(User);
 
 sequelize.sync()
 .then(() =>{
