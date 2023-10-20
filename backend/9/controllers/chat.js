@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken'); 
+const Sequelize = require("sequelize");
 
 const path = require('path');
 const User = require('../models/user')
@@ -24,27 +25,29 @@ exports.postSendMessage = async (req,res,next) =>{
 
         const userName = user.name;
 
-        await Message.create({
+        const newMessage = await Message.create({
             name:userName,
             message:message,
             userId:userId
-        })
-        .then(() =>{
-            return res.status(201).json({Message: "Message sent successfully"})
-        })
-        .catch(()=>{
-            return res.status(500).json({Error:"Failed to send the message"});
-        })
+        });
+        return res.status(201).json(newMessage)
     }
     catch(err){
-        console.log(err)
+        return res.status(500).json({Error:"Failed to send the message"});
     }
 }
 
 exports.getAllMessage = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        let messages = await Message.findAll();
+        const lastMessageId = req.query.lastMessageId; // Get the last message ID from the query parameter
+
+        // Find messages with IDs greater than the lastMessageId
+        let messages = await Message.findAll({
+            where: {
+                id: { [Sequelize.Op.gt]: lastMessageId }
+            }
+        });
 
         // Map the messages to create a new array with sender information
         const messagesWithSender = messages.map((message) => {
@@ -54,9 +57,11 @@ exports.getAllMessage = async (req, res, next) => {
                 sender: senderName,
             };
         });
+
         res.json({ messages: messagesWithSender });
     } catch (err) {
         console.log(err);
     }
 };
+
 
