@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 
 const sequelize = require('../util/database');
-const User = require('./user')
 
 const Group = sequelize.define('group',{
     GroupId:{
@@ -16,6 +15,5 @@ const Group = sequelize.define('group',{
     }
 });
 
-Group.belongsTo(User,{foreignKey: "creatorUser"})
 
 module.exports = Group

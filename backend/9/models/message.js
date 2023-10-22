@@ -1,8 +1,6 @@
 const Sequelize = require('sequelize');
 
 const sequelize = require('../util/database');
-const Group = require('./groups');
-const User = require('./user')
 
 const Message = sequelize.define('messages',{
     id:{
@@ -20,10 +18,5 @@ const Message = sequelize.define('messages',{
         allowNull: false
     }
 });
-
-
-Message.belongsTo(Group,{foreignKey: "groupId"})
-User.hasMany(Message)
-Message.belongsTo(User)
 
 module.exports = Message

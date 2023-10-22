@@ -8,10 +8,7 @@ const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user');
 const chatRoutes = require('./routes/chat');
 
-const User = require('./models/user')
-const Message = require('./models/message')
-const Group = require('./models/groups')
-const Member = require('./models/groupMembers')
+const models = require('./models/z')
 
 const app = express();
 
@@ -20,7 +17,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/user',userRoutes)
-app.use('/',chatRoutes)
+app.use('/chat',chatRoutes)
 const sequelize = require('./util/database');
 
 // User.hasMany(Message);

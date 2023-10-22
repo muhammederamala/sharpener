@@ -1,236 +1,149 @@
+window.onload = function () {
+    fetchInvites();
+    fetchGroups();
+};
 
-document.addEventListener("DOMContentLoaded", function () {
-    const chatBox = document.getElementById("chat-box");
-    const messageInput = document.getElementById("message-input");
-    const sendButton = document.getElementById("send-button");
+document.getElementById("reload-invites").addEventListener("click",function (){
+    fetchInvites()
+})
 
-    sendButton.addEventListener("click", function () {
-        sendMessage();
-    });
+async function fetchInvites() {
 
-    messageInput.addEventListener("keyup", function (event) {
-        if (event.key === "Enter") {
-            sendMessage();
-        }
-    });
+    const baseURL = window.location.protocol + '//' + window.location.host;
+    const token = localStorage.getItem("Token");
 
-    async function getMessagesFromLocalStorage(){
-        try{
+    try {
+        const response = await axios.post(`${baseURL}/chat/get-all-invites`, null, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
-        }
-        catch(err){
-            console.log(err)
-        }
-    }
+        // response.data.invites is an array of invitation objects
+        const invites = response.data.invites;
 
-    // Call fetchAndRenderAllMessages when the page loads
-    // fetchAndRenderAllMessages();
+        const userName = response.data.userName.name
 
-    setInterval(getMessagesFromLocalStorage, 1000);
+        const invitationsContainer = document.getElementById("invitations-container");
 
-    async function getMessagesFromLocalStorage() {
-        try {
-            // Get messages from localStorage
-            const messagesFromStorage = JSON.parse(localStorage.getItem("messages")) || [];
-    
-            if (messagesFromStorage.length === 0 || messagesFromStorage[0].id !== 1) {
-                // Messages are missing in local storage, call the backend to fetch all messages
-    
-                // Assuming you have a user ID and token stored in local storage
-                const token = localStorage.getItem("Token");
-    
-                // Make an Axios GET request to fetch all messages
-                const baseURL = window.location.protocol + '//' + window.location.host;
-    
-                try {
-                    const response = await axios.get(`${baseURL}/get-all-messages`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
+        // Clear the previous content
+        invitationsContainer.innerHTML = '';
+
+        if (invites.length === 0) {
+            // If there are no invitations, display a message
+            invitationsContainer.innerHTML = '<p>No invitations available.</p>';
+        } else {
+            // Loop through each invitation and create a card for each
+            invites.forEach((invite) => {
+                if (invite.status === 'pending') {
+                    const card = document.createElement("div");
+                    card.className = "card";
+            
+                    const cardBody = document.createElement("div");
+                    cardBody.className = "card-body";
+            
+                    const message = document.createElement("p");
+                    message.textContent = `${invite.sender.name} invited you to join group "${invite.group.GroupName}"`;
+            
+                    const acceptButton = document.createElement("button");
+                    acceptButton.className = "btn btn-success";
+                    acceptButton.textContent = "Accept";
+                    acceptButton.id = "acceptButton";
+                    acceptButton.value = "accepted";
+                    acceptButton.addEventListener("click", function () {
+                        let statusMessage = "accepted"
+                        handleInvites(invite.groupId,statusMessage);
                     });
-                
-                    // Handle the response and store the messages in local storage
-                    const messages = response.data.messages;
-
-                    // Update the messages in local storage
-                    const storedMessages = messages.map((message) => ({
-                        id: message.id,
-                        content: message.text,
-                        name: message.sender,
-                    }));
-                    console.log("this is the stored message",storedMessages)
-                
-                    localStorage.setItem("messages", JSON.stringify(storedMessages));
-                } catch (error) {
-                    // Handle errors, e.g., show an error message
-                    console.error("Error fetching and storing messages:", error);
-                }   
-            }
-    
-            // Clear the chat box
-            chatBox.innerHTML = "";
-    
-            // Render the messages from localStorage
-            messagesFromStorage.forEach((message) => {
-                appendMessage(message.name, message.content);
-            });
-        } catch (error) {
-            console.error("Error fetching messages from localStorage:", error);
-        }
-    }
-
-    setInterval(fetchAndRenderAllMessages, 1000);
-
-    async function fetchAndRenderAllMessages() {
-        // Assuming you have a user ID and token stored in local storage
-        const token = localStorage.getItem("Token");
-        
-        // Get the stored messages from local storage
-        const existingMessages = JSON.parse(localStorage.getItem("messages")) || [];
-        
-        // Get the last message ID from the last message in the stored messages
-        const lastMessageId = existingMessages.length > 0 ? existingMessages[existingMessages.length - 1].id : 0;
-        
-        // Make an Axios GET request to fetch messages since the last message ID
-        const baseURL = window.location.protocol + '//' + window.location.host;
-        
-        try {
-            const response = await axios.get(`${baseURL}/get-new-messages`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-                params: {
-                    lastMessageId: lastMessageId
+            
+                    const rejectButton = document.createElement("button");
+                    rejectButton.className = "btn btn-danger";
+                    rejectButton.textContent = "Reject";
+                    rejectButton.id = "rejectButton";
+                    rejectButton.value = "declined";
+                    rejectButton.addEventListener("click", function () {
+                        let statusMessage = "declined"
+                        handleInvites(invite.groupId,statusMessage);
+                    });
+            
+                    // Append elements to the card
+                    cardBody.appendChild(message);
+                    cardBody.appendChild(acceptButton);
+                    cardBody.appendChild(rejectButton);
+                    card.appendChild(cardBody);
+            
+                    // Append the card to the invitations container
+                    invitationsContainer.appendChild(card);
                 }
             });
-            console.log(response.data.messages)
-
-            // Handle the response and store the new messages in local storage
-            if(response.data.messages.length > 0)
-            { 
-                const messages = response.data.messages;
-
-                const mappedMessages = messages.map((message) => ({
-                    id: message.id,
-                    content: message.text,
-                    name: message.sender,
-                }));
-
-                // Retrieve the existing messages from local storage
-                const existingMessagesJSON = localStorage.getItem("messages");
-
-                // Check if there are existing messages
-                if (existingMessagesJSON) {
-                    console.log("appending to messages")
-                    console.log(mappedMessages)
-                    // Parse the JSON string back to an array
-                    const existingMessages = JSON.parse(existingMessagesJSON);
-
-                    // Merge the new messages with existing messages in local storage
-                    existingMessages.push(...mappedMessages);
-
-                    // Store the updated messages back in local storage
-                    localStorage.setItem("messages", JSON.stringify(existingMessages));
-                } else {
-                    // If there are no existing messages, simply store the new messages
-                    localStorage.setItem("messages", JSON.stringify(mappedMessages));
-                }
-            }
         }
-        catch (error) {
-            // Handle errors, e.g., show an error message
-            console.error("Error fetching messages:", error);
-        }
+    } catch (error) {
+        console.error("Error fetching invitations:", error);
     }
-    
+}
 
-    async function sendMessage() {
-        const messageText = messageInput.value;
-        if (messageText.trim() !== "") {
-            messageInput.value = "";
+async function handleInvites(GroupId,statusMessage) {
+    const acceptButton = document.getElementById("acceptButton");
+    const rejectButton = document.getElementById("rejectButton");
+  
+    let payload;
 
-            // Assuming you have a user ID and token stored in local storage
-            const token = localStorage.getItem("Token");
-
-            // Create a payload with the message and user ID
-            const payload = {
-                message: messageText,
-                token: token,
-            };
-
-            // Make an Axios POST request with the payload and token
-            const baseURL = window.location.protocol + '//' + window.location.host;
-
-            try {
-                const response = await axios.post(`${baseURL}/send-message`, payload, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                const { id, message, name } = response.data;
-
-                const existingMessages = JSON.parse(localStorage.getItem("messages")) || [];
-
-                const newMessage = { id:id, content: message, name: name };
-
-                existingMessages.push(newMessage);
-
-                localStorage.setItem("messages", JSON.stringify(existingMessages));
-
-                // Handle the response, e.g., show a success message
-                console.log("Message sent successfully.");
-            } catch (error) {
-                // Handle errors, e.g., show an error message
-                console.error("Error sending message:", error);
-            }
-        }
+    if (statusMessage === "accepted") {
+        payload = {
+            status: acceptButton.value,
+            GroupId: GroupId
+        };
+    } else if (statusMessage === "declined") {
+        payload = {
+            status: rejectButton.value,
+            GroupId: GroupId
+        };
     }
 
-    function appendMessage(senderName, text) {
-        const message = document.createElement("div");
-        message.className = `message ${senderName}`;
-        message.textContent = `${senderName}: ${text}`;
-        chatBox.appendChild(message);
+    const token = localStorage.getItem("Token");
+    const baseURL = window.location.protocol + '//' + window.location.host;
 
-        // Scroll to the bottom of the chat box
-        chatBox.scrollTop = chatBox.scrollHeight;
+    const response = await axios.post(`${baseURL}/chat/handle-invitation`, payload, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    location.reload();
+}
+
+async function fetchGroups() {
+    try {
+      const token = localStorage.getItem('Token');
+      const baseUrl = window.location.protocol + '//' + window.location.host;
+  
+      const response = await axios.get(`${baseUrl}/chat/get-all-groups`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const groupList = document.getElementById('group-list-ul'); // Select the <ul> element
+  
+      // Assuming response.data.groups is an array of group objects
+
+      console.log(response.data);
+
+      response.data.groups.forEach((group) => {
+        const groupItem = document.createElement('a');
+        groupItem.href = `/chat/group?groupId=${group.Token}`;
+        groupItem.className = 'list-group-item list-group-item-action';
+  
+        const groupName = document.createElement('h5');
+        groupName.textContent = group.GroupName;
+        groupName.className = 'group-name';
+  
+        // Append the group name element to the group item
+        groupItem.appendChild(groupName);
+  
+        // Append the group item to the group list container (the <ul>)
+        groupList.appendChild(groupItem);
+      });
+    } catch (err) {
+      console.log(err);
     }
-
-//     async function fetchAndStoreMessages(startingMessageId) {
-//     // Assuming you have a user ID and token stored in local storage
-//     const token = localStorage.getItem("Token");
-    
-//     // Make an Axios GET request to fetch messages starting from the specified message ID
-//     const baseURL = window.location.protocol + '//' + window.location.host;
-    
-//     try {
-//         const response = await axios.get(`${baseURL}/get-all-messages`, {
-//             headers: {
-//                 Authorization: `Bearer ${token}`,
-//             },
-//             params: {
-//                 startingMessageId: startingMessageId
-//             }
-//         });
-
-//         // Handle the response and store the new messages in local storage
-//         const messages = response.data.messages;
-
-//         // Merge the new messages with existing messages in local storage
-//         const existingMessages = JSON.parse(localStorage.getItem("messages")) || [];
-//         const mergedMessages = [...existingMessages, ...messages];
-
-//         // Limit the stored messages to the most recent 10
-//         const storedMessages = mergedMessages.slice(-10);
-
-//         // Update the messages in local storage
-//         localStorage.setItem("messages", JSON.stringify(storedMessages));
-//     } catch (error) {
-//         // Handle errors, e.g., show an error message
-//         console.error("Error fetching and storing messages:", error);
-//     }
-// }
-
-});
-
+}

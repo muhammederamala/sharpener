@@ -9,10 +9,24 @@ const authenticationMiddleware = require('../middleware/authenticationMiddleware
 
 router.get('/',chatController.getHome)
 
+router.get('/group-form',chatController.getAddGroup)
+
+router.post('/add-group',authenticationMiddleware,chatController.postAddGroup)
+
+router.get('/group',chatController.getChat)
+
 router.post('/send-message',authenticationMiddleware,chatController.postSendMessage)
 
 router.get('/get-all-messages',authenticationMiddleware,chatController.getAllMessages)
 
 router.get('/get-new-messages',authenticationMiddleware,chatController.getNewMessage)
+
+router.post('/get-all-invites',authenticationMiddleware,chatController.getAllInvites)
+
+router.post('/handle-invitation',authenticationMiddleware,chatController.handleInvitation)
+
+router.get('/get-all-groups',authenticationMiddleware,chatController.getAllGroups)
+
+router.get('/get-all-participants',authenticationMiddleware,chatController.getAllParticipants)
 
 module.exports = router

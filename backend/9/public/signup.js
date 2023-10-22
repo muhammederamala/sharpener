@@ -1,9 +1,8 @@
 async function signup(e){
     try{
         e.preventDefault()
-        console.log(e.target.email.value);
       
-            const signUpDetails = {
+        const signUpDetails = {
             name: e.target.name.value,
             email: e.target.email.value,
             password: e.target.password.value,
@@ -54,7 +53,7 @@ async function login(e){
             const token = response.data.token;
             localStorage.setItem('Token', token);
 
-            window.location.href = `${baseURL}/`;
+            window.location.href = `${baseURL}/chat`;
         }
         else{
             console.log("Error logging into account")
