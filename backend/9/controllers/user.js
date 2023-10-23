@@ -73,7 +73,7 @@ exports.postLogin = async (req,res,next) =>{
             res.status(401).json({message: "Incorrect Login Credentials"})
         }
     }
-    catch(err){
-        console.log(err)
+    catch(error){
+        console.log(error)
     }
 }
