@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/chat/styles.css">
 </head>
 <body>
     <div class="container mt-5">
         <div class="row">
             <!-- Chat Card -->
             <div class="col-md-6">
-                <div class="card">
+                <div class="card mb-5">
                     <div class="card-header">Chat</div>
                     <div class="card-body">
                         <div class="chat-box" id="chat-box" style="min-height: 250px;">
@@ -28,20 +29,40 @@
                     </div>
                 </div>
             </div>
-    
+            <br><br>
             <!-- Participants Card -->
             <div class="col-md-6">
                 <div class="card" style="min-height: 400px;">
                     <div class="card-header bg-primary text-white">Participants</div>
                     <div class="card-body">
-                        <div id="participants-list">
+                        <ul id="participants-list" class="list-group">
+                            <!-- Participant list items will be generated here -->
+                        </ul>
+
+                        <!-- Add Participant button with Bootstrap styling -->
+                        <a id="add-participant-button-anchor">
+                            <button class="btn btn-success" 
+                            id="add-participant-button" 
+                            style="margin-left: 40px; margin-top: 20px;">
+                                Add Participant
+                            </button>
+                        </a>
+
+                        <!-- Hidden form for adding a participant with Bootstrap styling -->
+                        <div id="add-participant-form" class="mt-5 ml-4" style="display: none;">
+                            <form class="form-inline">
+                                <div class="form-group mr-2">
+                                    <input type="text" id="phone-number" class="form-control" placeholder="Enter Phone Number">
+                                </div>
+                                <button id="add-new-participant" class="btn btn-primary">Add</button>
+                            </form>
                         </div>
+                                               
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
     
     <script src="/chat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

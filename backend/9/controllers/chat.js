@@ -170,6 +170,21 @@ exports.postAddGroup = async (req,res,next) =>{
     }
 }
 
+exports.addNewParticipant = async (req,res,next) =>{
+    try{
+        const userId = req.user.id
+        const groupIdToken = req.query.groupId
+        const groupId = decodeToken(groupIdToken,process.env.TOKEN_SECRET_KEY)
+        const groupMembers = req.body.phoneNumber
+
+        await sendInvite(userId,groupMembers,groupId)
+        return res.status(201).json({response})
+    }
+    catch(err){
+        res.status(404)
+    }
+}
+
 async function sendInvite(userId,groupMembers,groupId){
     try {
         const users = await User.findAll({
@@ -292,23 +307,103 @@ exports.getAllGroups = async (req, res, next) => {
     }
 };
 
-exports.getAllParticipants = async (req,res,next) =>{
-    try{
-        const userId = req.user.id
-        const groupIdToken = req.query.groupId
+exports.getAllParticipants = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const groupIdToken = req.query.groupId;
         const groupId = decodeToken(groupIdToken, process.env.TOKEN_SECRET_KEY);
 
-        const participants = await GroupMember.findAll({
-            where:{
+        const groupMembers = await GroupMember.findAll({
+            where: {
                 groupId: groupId
             }
         });
-        
-        console.log(participants)
-        res.status(200).json({participants:participants})
-    }
-    catch(err){
-        res.status(404)
+
+        // Create a new object to include membership information
+        const participantsWithMembership = await Promise.all(groupMembers.map(async (member) => {
+            const user = await User.findOne({
+                where: {
+                    id: member.MemberUserID
+                },
+                attributes: ['id', 'name', 'phone']
+            });
+
+            return {
+                id: user.id,
+                name: user.name,
+                phone: user.phone,
+                membership: member.isAdmin? 'admin' : 'member'
+            };
+        }));
+
+        const currentUserMembership = participantsWithMembership.find(participant => participant.id == userId)
+        const currentUser = currentUserMembership && currentUserMembership.membership === 'admin'
+
+        res.status(200).json({
+            participants: participantsWithMembership, 
+            currentUser: currentUser, 
+            userId:userId
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(404).json({ error: err.message });
     }
 }
-  
+
+exports.makeAdmin = async (req,res,next) =>{
+    try{
+        const participantId = req.body.participantId;
+        const groupIdToken = req.body.groupId;
+        const groupId = decodeToken(groupIdToken,process.env.TOKEN_SECRET_KEY)
+        const userId = req.user.id
+
+        const requestingUserIsAdmin = await GroupMember.findOne({
+            where: {
+                MemberUserID: userId,
+                groupId: groupId,
+                isAdmin: true
+            }
+        });
+
+        if(requestingUserIsAdmin){
+            let adminGroup = await GroupMember.update({ isAdmin: true}, 
+                {
+                    where:{
+                        MemberUserID:participantId,
+                        groupId:groupId
+                    }
+                }
+            )
+            res.status(200).json({message:"Admin added"})
+        }
+
+        else {
+            // The requesting user is not an admin, so return an error
+            res.status(403).json({ message: "Access denied. You are not an admin in this group." });
+        }
+    }
+    catch(err){
+        res.status(404).json({message:"Page not found!"})
+    }
+}
+
+exports.removeMember = async (req,res,next) =>{
+    try{
+        const userId = req.user.id;
+        const participantId = req.query.participantId;
+        const groupIdToken = req.query.groupId;
+        const groupId = decodeToken(groupIdToken,process.env.TOKEN_SECRET_KEY);
+
+        await GroupMember.destroy({
+            where:{
+                MemberUserID:participantId,
+                groupId:groupId
+            }
+        });
+        res.status(200).json({message:"Successfully removed member from the group"});
+    }
+    catch(err){
+        res.status(404).json({message:"Page not found"})
+    }
+}

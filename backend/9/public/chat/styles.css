@@ -1,0 +1,36 @@
+/* Style for chat messages */
+.message {
+    padding: 3px;
+    margin: 10px 0;
+    border-radius: 15px;
+    max-width: 80%;
+    background-color: aqua;
+}
+
+/* Style for sender's messages */
+.message.senderName {
+    background-color: #e1ffc7; /* Light green for sender's messages */
+    align-self: flex-end;
+}
+
+/* Style for receiver's messages */
+.message.receiverName {
+    background-color: #f1f1f1; /* Light gray for receiver's messages */
+    align-self: flex-start;
+}
+
+/* Add this CSS to make the chat box scrollable */
+#chat-box {
+    max-height: 250px; /* Set the maximum height for the chat box */
+    overflow-y: auto;  /* Enable vertical scrollbar when content exceeds the height */
+}
+
+/* Optional: Add some padding for better styling */
+.card-body {
+    padding: 15px;
+}
+
+.small-button {
+    font-size: 0.75rem; /* Adjust the font size to make the buttons smaller */
+    padding: 0.2rem 0.4rem; /* Adjust the padding to make the buttons smaller */
+}

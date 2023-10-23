@@ -29,4 +29,10 @@ router.get('/get-all-groups',authenticationMiddleware,chatController.getAllGroup
 
 router.get('/get-all-participants',authenticationMiddleware,chatController.getAllParticipants)
 
+router.post('/add-new-participant',authenticationMiddleware,chatController.addNewParticipant)
+
+router.patch('/make-admin',authenticationMiddleware,chatController.makeAdmin)
+
+router.delete('/delete-member',authenticationMiddleware,chatController.removeMember)
+
 module.exports = router
