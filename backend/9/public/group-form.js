@@ -1,3 +1,5 @@
+const socket = io();
+
 async function addGroup(e){
     e.preventDefault();
     try{

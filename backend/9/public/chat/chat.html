@@ -5,66 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/chat/styles.css">
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">ChatApp</a>
+        <button 
+        class="navbar-toggler" 
+        type="button" 
+        data-toggle="collapse" 
+        data-target="#navbarNav" 
+        aria-controls="navbarNav" 
+        aria-expanded="false" 
+        aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/chat/group-form">Add Group</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="reload-invites" href="" class="btn btn-success">
+                        Refresh Invites
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container mt-5">
         <div class="row">
             <!-- Chat Card -->
             <div class="col-md-6">
                 <div class="card mb-5">
                     <div class="card-header">Chat</div>
-                    <div class="card-body">
-                        <div class="chat-box" id="chat-box" style="min-height: 250px;">
-                            <!-- Chat messages will be displayed here -->
+                        <div class="card-body">
+                            <div class="chat-box" id="chat-box" style="min-height: 250px;">
+                                <!-- Chat messages will be displayed here -->
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="message-input" placeholder="Type your message...">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" id="send-button">Send</button>
+                        <div class="card-footer pl-1">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <a href="javascript:void(0);" class="btn" id="plus-button">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+                                    <!-- Hidden file input -->
+                                    <input type="file" id="file-input-modal" style="display: none;">
+                                </div>
+                                <input 
+                                type="text" 
+                                class="form-control" 
+                                id="message-input" 
+                                placeholder="Type your message...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" id="send-button">Send</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <br><br>
-            <!-- Participants Card -->
-            <div class="col-md-6">
-                <div class="card" style="min-height: 400px;">
-                    <div class="card-header bg-primary text-white">Participants</div>
-                    <div class="card-body">
-                        <ul id="participants-list" class="list-group">
-                            <!-- Participant list items will be generated here -->
-                        </ul>
-
-                        <!-- Add Participant button with Bootstrap styling -->
-                        <a id="add-participant-button-anchor">
-                            <button class="btn btn-success" 
-                            id="add-participant-button" 
-                            style="margin-left: 40px; margin-top: 20px;">
-                                Add Participant
-                            </button>
-                        </a>
-
-                        <!-- Hidden form for adding a participant with Bootstrap styling -->
-                        <div id="add-participant-form" class="mt-5 ml-4" style="display: none;">
-                            <form class="form-inline">
-                                <div class="form-group mr-2">
-                                    <input type="text" id="phone-number" class="form-control" placeholder="Enter Phone Number">
-                                </div>
-                                <button id="add-new-participant" class="btn btn-primary">Add</button>
-                            </form>
+                <br><br>
+                <!-- Participants Card -->
+                <!-- Participants Card with Toggle Dropdown -->
+                <div class="col-md-6">
+                    <div class="card" style="min-height: 400px;">
+                        <div 
+                        class="card-header bg-primary text-white" 
+                        data-toggle="collapse" 
+                        data-target="#participants-content">
+                            View Participants
                         </div>
-                                               
+                            <div id="participants-content" class="collapse">
+                                <div class="card-body">
+                                    <div class="list-group" id="participants-list">
+                                    <!-- Participant list items will be generated here -->
+                                </div>
+                                <div class="add-participant-button mt-3">
+                                    <button 
+                                    class="btn btn-success" 
+                                    id="add-participant-button-anchor" 
+                                    data-toggle="collapse" 
+                                    data-target="#add-participant-form">
+                                        Add Participant
+                                    </button>
+                                </div>
+                            <div id="add-participant-form" class="collapse mt-3">
+                                <form class="form-inline">
+                                    <div class="form-group mr-2">
+                                        <input type="text" id="phone-number" 
+                                        class="form-control" placeholder="Enter Phone Number">
+                                    </div>
+                                    <button id="add-new-participant" class="btn btn-primary">
+                                        Add
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <script src="/chat.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/socketConfig"></script>
+    
+    <script src="/chat.js"></script>
+    <script src="/fileHandle.js"></script>
 </body>
 </html>

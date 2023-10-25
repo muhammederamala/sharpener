@@ -2,37 +2,75 @@
 <html>
 <head>
     <title>Add Group</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
+
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">ChatApp</a>
+        <button 
+        class="navbar-toggler" 
+        type="button" 
+        data-toggle="collapse" 
+        data-target="#navbarNav" 
+        aria-controls="navbarNav" 
+        aria-expanded="false" 
+        aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/chat/group-form">Add Group</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="reload-invites" href="" class="btn btn-success">
+                        Refresh Invites
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-6 mx-auto">
+            <div class="col-md-8 offset-md-2">
                 <div class="card">
                     <div class="card-header">
-                        <h2>Add Group</h2>
+                        <h2 class="text-center">Add Group</h2>
                     </div>
                     <div class="card-body">
                         <form onsubmit="addGroup(event)" method="post">
                             <div class="form-group">
                                 <label for="group-name">Group Name</label>
-                                <input type="text" id="group-name" name="group-name" class="form-control" required>
+                                <input type="text" id="group-name" name="group-name" 
+                                class="form-control" required placeholder="Enter group name">
                             </div>
                             <div class="form-group">
-                                <label for="phone-number">Phone Number</label>
-                                <input type="text" id="members" name="members" class="form-control" required>
+                                <label for="members">Participants Number</label>
+                                <input type="text" id="members" 
+                                name="members" class="form-control" 
+                                required placeholder="seperate using commas">
                             </div>
-                            <button type="submit" class="btn btn-primary">Create Group</button>
+                            <button type="submit" class="btn btn-primary float-left">Create Group</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="/group-form.js">
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Scripts should be placed at the end of the body for better page loading performance -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script src="/group-form.js"></script>
 </body>
 </html>

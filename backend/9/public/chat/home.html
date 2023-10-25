@@ -4,27 +4,59 @@
     <title>Chat Application</title>
     <!-- Add Bootstrap CSS link here -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/chat/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+
     <style>
         /* Add custom CSS styles here if needed */
     </style>
 </head>
 <body>
-    <div class="container mt-5">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">ChatApp</a>
+        <button 
+        class="navbar-toggler" 
+        type="button" 
+        data-toggle="collapse" 
+        data-target="#navbarNav" 
+        aria-controls="navbarNav" 
+        aria-expanded="false" 
+        aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/chat/group-form">Add Group</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="reload-invites" href="" class="btn btn-success">
+                        Refresh Invites
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
         <div class="row">
-            <div class="col-md-6">
-
-                <a href="/chat/group-form" class="btn btn-primary btn-block mb-3">Create Group</a>
-
-                
+            <div class="col-12">
+                <h2 class="mb-3">Chats</h2> <!-- Added the heading "Chats" -->
                 <!-- List of Chats and Groups -->
-                <div class="group-list">
-                    <ul id="group-list-ul"> <!-- Add id to the <ul> element -->
+                <div class="group-list" style="margin: 0; padding: 0;">
+                    <ul id="group-list-ul" style="margin: 0; padding: 0;"> <!-- Add id to the <ul> element -->
+                        <!-- Add your list items here -->
                     </ul>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div id="invitations-container"></div>
-                <button id="reload-invites" class="btn btn-success">reload</button>
+        </div>
+        <div class="row mt-2">
+            <div class="col-12">
+                <div id="invitations-container" class="ml-2 mt-2"></div>
             </div>
         </div>
     </div>
@@ -33,6 +65,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     
     <script src="/home.js"></script>
 </body>

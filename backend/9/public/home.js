@@ -1,3 +1,5 @@
+const socket = io();
+
 window.onload = function () {
     fetchInvites();
     fetchGroups();
@@ -123,26 +125,26 @@ async function fetchGroups() {
       });
 
       const groupList = document.getElementById('group-list-ul'); // Select the <ul> element
-  
-      // Assuming response.data.groups is an array of group objects
-
-      console.log(response.data);
 
       response.data.groups.forEach((group) => {
-        const groupItem = document.createElement('a');
-        groupItem.href = `/chat/group?groupId=${group.Token}`;
-        groupItem.className = 'list-group-item list-group-item-action';
-  
-        const groupName = document.createElement('h5');
-        groupName.textContent = group.GroupName;
-        groupName.className = 'group-name';
-  
-        // Append the group name element to the group item
-        groupItem.appendChild(groupName);
-  
-        // Append the group item to the group list container (the <ul>)
-        groupList.appendChild(groupItem);
+          const groupItem = document.createElement('a');
+          groupItem.href = `/chat/group?groupId=${group.Token}`;
+          groupItem.className = 'list-group-item list-group-item-action';
+      
+          const groupName = document.createElement('h5');
+          groupName.textContent = group.GroupName;
+          groupName.className = 'group-name';
+      
+          // Add custom CSS to remove left padding/margin
+          groupItem.style.marginLeft = '0'; // Set left margin to 0
+      
+          // Append the group name element to the group item
+          groupItem.appendChild(groupName);
+      
+          // Append the group item to the group list container (the <ul>)
+          groupList.appendChild(groupItem);
       });
+      
     } catch (err) {
       console.log(err);
     }

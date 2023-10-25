@@ -13,6 +13,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    const socket = io();
+    socket.on('new-message',(message) =>{
+        fetchAllMessages()
+    })
+
+    async function establishSocket(){
+        const urlParams = new URLSearchParams(window.location.search);
+        const groupId = urlParams.get('groupId')
+        const token = localStorage.getItem('Token');
+        const baseURL = window.location.protocol + '//' + window.location.host;
+
+        const response = await axios.get(`${baseURL}/chat/decode-groupId`,{
+            params:{
+                groupId:groupId
+            }
+        });
+
+        socket.emit('new-group',response.data.groupId)
+    }
+
     // handles adding new participant. calls addnewparticipant function
     // after splitting th emembers phone number
     const addParticipantForm = document.getElementById("add-participant-form");
@@ -22,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const membersString = phoneNumberInput.value;
         const membersArray = membersString.split(',').map(member => member.trim());
-        console.log(membersArray)
+
         // Perform an Axios POST request to add a new participant
         addNewParticipant(membersArray);
     });
@@ -57,8 +77,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     }
+
     let isChatBoxScrolledToBottom = true;
-    setInterval(fetchAllMessages,1000)
+    // setInterval(fetchAllMessages,10000)
 
     async function fetchAllMessages(){
         const token = localStorage.getItem('Token');
@@ -115,14 +136,17 @@ document.addEventListener("DOMContentLoaded", function () {
         const scrollPosition = localStorage.getItem('chatBoxScrollPosition');
 
         if (scrollPosition !== null) {
-            chatBox.scrollTop = parseInt(scrollPosition);
-        }
-        else {
-            chatBox.scrollTop = chatBox.scrollHeight;
+            // Check if the difference between scrollPosition and the bottom is significant
+            const significantDifference = chatBox.scrollHeight - scrollPosition > 600; // Adjust the threshold as needed
+
+            if (significantDifference) {
+              chatBox.scrollTop = parseInt(scrollPosition); // Scroll to the original position
+            } else {
+              chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+            }
         }
 
     }
-      
 
     async function getAllParticipants(){
         const token = localStorage.getItem('Token');
@@ -149,37 +173,37 @@ document.addEventListener("DOMContentLoaded", function () {
     
             // Create an unordered list element to display participants
             const ul = document.createElement('ul');
+            ul.classList.add('m-0', 'p-0')
 
             participants.forEach((participant) => {
                 const li = document.createElement('li');
-                li.classList.add('list-group-item', 'list-group-item-action');
+                li.classList.add('list-group-item', 'list-group-item-action', 'd-flex', 'justify-content-between', 'align-items-center');
             
                 const content = document.createElement('div');
-                content.classList.add('d-flex', 'justify-content-between', 'align-items-center');
-                content.innerHTML = `
-                <span class="font-weight-bold small">${participant.name}</span>
-                <small class="text-muted small">${participant.phone}</small>
-                <span class="badge badge-primary badge-pill small">${participant.membership}</span>
+            
+                const participantInfo = document.createElement('div');
+                participantInfo.innerHTML = `
+                    <span class="font-weight-bold  mb-2 mr-5">${participant.name}</span>
+                    <small class="text-muted  mb-2 mr-5">phone:<strong>${participant.phone}</strong></small>
+                    <span class="badge badge-primary badge-pill">${participant.membership}</span>
                 `;
             
                 const buttons = document.createElement('div');
-                buttons.classList.add('buttons');
             
                 if (currentUserIsAdmin && participant.id !== userId) {
                     const removeButton = document.createElement('button');
                     removeButton.innerText = 'Remove';
-                    removeButton.classList.add('btn', 'btn-danger', 'small-button', 'mr-2'); // Added 'small-button' class
+                    removeButton.classList.add('btn', 'btn-danger', 'small-button', 'mr-2', 'mt-3');
                     removeButton.addEventListener('click', () => {
                         removeMember(participant.id)
                     });
             
                     const makeAdminButton = document.createElement('button');
                     makeAdminButton.innerText = 'Make Admin';
-                    if(participant.membership === 'admin'){
-                        makeAdminButton.classList.add('btn', 'btn-success', 'small-button', 'disabled')
-                    }
-                    else{
-                        makeAdminButton.classList.add('btn', 'btn-success', 'small-button'); // Added 'small-button' class
+                    if (participant.membership === 'admin') {
+                        makeAdminButton.classList.add('btn', 'btn-success', 'small-button', 'disabled', 'mt-3');
+                    } else {
+                        makeAdminButton.classList.add('btn', 'btn-success', 'small-button', 'mt-3');
                     }
                     makeAdminButton.addEventListener('click', () => {
                         makeAdmin(participant.id);
@@ -188,24 +212,25 @@ document.addEventListener("DOMContentLoaded", function () {
                     buttons.appendChild(removeButton);
                     buttons.appendChild(makeAdminButton);
                 } else {
-                    // If the current user is not an admin, disable the buttons
                     const removeButton = document.createElement('button');
                     removeButton.innerText = 'Remove';
-                    removeButton.classList.add('btn', 'btn-danger', 'small-button', 'mr-2', 'disabled');
-                    
+                    removeButton.classList.add('btn', 'btn-danger', 'small-button', 'mr-2', 'mt-3', 'disabled');
+            
                     const makeAdminButton = document.createElement('button');
                     makeAdminButton.innerText = 'Make Admin';
-                    makeAdminButton.classList.add('btn', 'btn-success', 'small-button', 'disabled');
-                    
+                    makeAdminButton.classList.add('btn', 'btn-success', 'small-button', 'mt-3', 'disabled');
+            
                     buttons.appendChild(removeButton);
                     buttons.appendChild(makeAdminButton);
                 }
             
+                content.appendChild(participantInfo);
                 content.appendChild(buttons);
-
+            
                 li.appendChild(content);
                 ul.appendChild(li);
             });
+            
             
             // Append the list to the 'participants-list' div
             participantsListDiv.appendChild(ul);
@@ -308,6 +333,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (scrollPosition !== null) {
             chatBox.scrollTop = parseInt(scrollPosition);
         }
+        await establishSocket();
+        await fetchAllMessages();
         await getAllParticipants();
     }
 });

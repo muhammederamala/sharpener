@@ -24,6 +24,17 @@ function decodeToken(token, secret) {
     }
 }
 
+exports.decodeJwtToken = async (req,res,next) =>{
+    let groupIdToken = req.query.groupId
+    const groupId = decodeToken(groupIdToken,process.env.TOKEN_SECRET_KEY)
+
+    try{
+        res.status(201).json({groupId:groupId});
+    }
+    catch(err){
+        res.status(404)
+    }
+}
 
 exports.getHome = (req,res,next) =>{
     const filePath = path.join(__dirname, '../public/chat/home.html');
@@ -42,8 +53,9 @@ exports.getAddGroup = (req,res,next) =>{
 
 exports.postSendMessage = async (req,res,next) =>{
     try{
-        const { message, groupIdToken } = req.body;
+        const { message,file, groupIdToken } = req.body;
         const userId = req.user.id;
+        const io = req.io
 
         const user = await User.findOne({
             where:{
@@ -54,12 +66,29 @@ exports.postSendMessage = async (req,res,next) =>{
         const userName = user.name;
         const groupId = decodeToken(groupIdToken, process.env.TOKEN_SECRET_KEY);
 
-        const newMessage = await Message.create({
-            name:userName,
-            message:message,
-            groupId: groupId,
-            userId:userId
-        });
+        let newMessage;
+
+        if (file) {
+            // If it's a file, create the message with the file field and remove the message field
+            newMessage = await Message.create({
+                name: userName,
+                file: file,
+                groupId: groupId,
+                userId: userId
+            });
+        } 
+        else {
+            // If it's text, create the message with the message field
+            newMessage = await Message.create({
+                name: userName,
+                message: message,
+                groupId: groupId,
+                userId: userId
+            });
+        }
+
+        io.emit('new-message', newMessage);
+
         return res.status(201).json(newMessage)
     }
     catch(err){
@@ -147,6 +176,7 @@ exports.postAddGroup = async (req,res,next) =>{
     try{
         const { groupName, groupMembers } = req.body
         const userId = req.user.id
+        const io = req.io
 
         const response = await Group.create({
             GroupName: groupName,
@@ -162,6 +192,7 @@ exports.postAddGroup = async (req,res,next) =>{
         })
 
         await sendInvite(userId,groupMembers,response.GroupId)
+
         return res.status(201).json({response})
 
     }

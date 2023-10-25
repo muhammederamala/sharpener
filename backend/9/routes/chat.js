@@ -35,4 +35,6 @@ router.patch('/make-admin',authenticationMiddleware,chatController.makeAdmin)
 
 router.delete('/delete-member',authenticationMiddleware,chatController.removeMember)
 
+router.get('/decode-groupId',chatController.decodeJwtToken)
+
 module.exports = router
