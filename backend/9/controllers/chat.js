@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken'); 
 const Sequelize = require("sequelize");
+const { uploadFileToS3,retrieveFileFromS3 } = require('./fileUpload');
+
 
 const path = require('path');
 const { 
@@ -53,7 +55,8 @@ exports.getAddGroup = (req,res,next) =>{
 
 exports.postSendMessage = async (req,res,next) =>{
     try{
-        const { message,file, groupIdToken } = req.body;
+        const message = req.body.message;
+        const groupIdToken = req.query.groupIdToken
         const userId = req.user.id;
         const io = req.io
 
@@ -63,21 +66,12 @@ exports.postSendMessage = async (req,res,next) =>{
             },
             attributes: ['name'],
         });
+
         const userName = user.name;
         const groupId = decodeToken(groupIdToken, process.env.TOKEN_SECRET_KEY);
 
         let newMessage;
-
-        if (file) {
-            // If it's a file, create the message with the file field and remove the message field
-            newMessage = await Message.create({
-                name: userName,
-                file: file,
-                groupId: groupId,
-                userId: userId
-            });
-        } 
-        else {
+        if (message) {
             // If it's text, create the message with the message field
             newMessage = await Message.create({
                 name: userName,
@@ -89,6 +83,43 @@ exports.postSendMessage = async (req,res,next) =>{
 
         io.emit('new-message', newMessage);
 
+        return res.status(201).json(newMessage)
+    }
+    catch(err){
+        return res.status(500).json({Error:"Failed to send the message"});
+    }
+}
+
+exports.postSendFile = async (req,res,next) =>{
+    try{
+        const message = req.body.message;
+        const groupIdToken = req.query.groupIdToken
+        const fileName = req.query.fileName
+        const userId = req.user.id;
+        const io = req.io
+        const file = req.files.image;
+
+        const user = await User.findOne({
+            where:{
+                id:userId
+            },
+            attributes: ['name'],
+        });
+
+        const userName = user.name;
+        const groupId = decodeToken(groupIdToken, process.env.TOKEN_SECRET_KEY);
+        let newMessage;
+
+        newMessage = await Message.create({
+            name: userName,
+            groupId: groupId,
+            userId: userId
+        });
+        const stringId = JSON.stringify(newMessage.id)
+        const fileUrl = await uploadFileToS3(file,fileName,stringId);
+        await newMessage.update({file:fileUrl})
+
+        io.emit('new-message', newMessage);
         return res.status(201).json(newMessage)
     }
     catch(err){
@@ -147,23 +178,31 @@ exports.getNewMessage = async (req, res, next) => {
 exports.getAllMessages = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        const groupIdToken = req.query.groupId
+        const groupIdToken = req.query.groupId;
         const groupId = decodeToken(groupIdToken, process.env.TOKEN_SECRET_KEY);
 
         let messages = await Message.findAll({
-            where:{
-                groupId:groupId
+            where: {
+                groupId: groupId
             }
         });
 
         // Map the messages to create a new array with sender information
         const messagesWithSender = messages.map((message) => {
             const senderName = message.userId === userId ? "You" : message.name;
-            return {
+            const messageData = {
                 id: message.id,
-                text: message.message,
                 sender: senderName,
             };
+
+            if (message.message === null && message.file) {
+                // If the message is a file, and there is a link in the file column
+                messageData.file = message.file; // Add the file link to the messageData
+            } else {
+                messageData.text = message.message;
+            }
+
+            return messageData;
         });
 
         res.json({ messages: messagesWithSender });
@@ -171,6 +210,29 @@ exports.getAllMessages = async (req, res, next) => {
         console.log(err);
     }
 };
+
+exports.getMediaFile = async (req,res,next) =>{
+    try{
+        const userId = req.user.id
+        const file = req.query.fileName;
+        const fileName = file.split('/').pop();
+        const response = await retrieveFileFromS3(fileName);
+
+        const message = await Message.findOne({
+            where:{
+                file:file
+            }
+        });
+        res.setHeader('Content-Type', 'application/octet-stream');
+        res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+
+        res.send(response);
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({message:"Error fetching file"})
+    }
+}
 
 exports.postAddGroup = async (req,res,next) =>{
     try{

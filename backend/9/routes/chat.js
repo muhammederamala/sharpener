@@ -17,6 +17,8 @@ router.get('/group',chatController.getChat)
 
 router.post('/send-message',authenticationMiddleware,chatController.postSendMessage)
 
+router.post('/send-file',authenticationMiddleware,chatController.postSendFile)
+
 router.get('/get-all-messages',authenticationMiddleware,chatController.getAllMessages)
 
 router.get('/get-new-messages',authenticationMiddleware,chatController.getNewMessage)
@@ -36,5 +38,7 @@ router.patch('/make-admin',authenticationMiddleware,chatController.makeAdmin)
 router.delete('/delete-member',authenticationMiddleware,chatController.removeMember)
 
 router.get('/decode-groupId',chatController.decodeJwtToken)
+
+router.get('/get-file',authenticationMiddleware,chatController.getMediaFile)
 
 module.exports = router

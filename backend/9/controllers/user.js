@@ -4,6 +4,11 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const User = require('../models/user')
 
+exports.getWelcome = (req,res,next) =>{
+    const filePath = path.join(__dirname, '../public/user/welcome.html');
+    res.sendFile(filePath)
+}
+
 exports.getSignup = (req,res,next) =>{
     const filePath = path.join(__dirname, '../public/user/signup.html');
     res.sendFile(filePath)

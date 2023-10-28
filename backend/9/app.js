@@ -1,19 +1,23 @@
 const path = require('path');
 const http = require('http');
 require('dotenv').config();
-const cors = require('cors')
+const fileUpload = require('express-fileupload');
 
 const express = require('express')
 const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/user');
 const chatRoutes = require('./routes/chat');
+const welcomeRoutes = require('./routes/welcome')
 
 const models = require('./models/z')
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use(fileUpload());
+
+app.use(bodyParser.raw({ type: 'application/octet-stream', limit: '10mb' }))
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -27,6 +31,7 @@ app.use((req, res, next) => {
 
 app.use('/user',userRoutes)
 app.use('/chat',chatRoutes)
+app.use('/',welcomeRoutes)
 const sequelize = require('./util/database');
 
 // User.hasMany(Message);

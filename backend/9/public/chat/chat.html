@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/chat/styles.css">
 </head>
 <body>
+    <!--this is the navbar--> 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">ChatApp</a>
         <button 
@@ -52,10 +53,9 @@
                         <div class="card-footer pl-1">
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <a href="javascript:void(0);" class="btn" id="plus-button">
+                                    <button class="btn" data-toggle="modal" data-target="#imageModal">
                                         <i class="fas fa-plus"></i>
-                                    </a>
-                                    <!-- Hidden file input -->
+                                    </button>                                    
                                     <input type="file" id="file-input-modal" style="display: none;">
                                 </div>
                                 <input 
@@ -71,6 +71,34 @@
                     </div>
                 </div>
                 <br><br>
+                <!--This is the modal-->
+                <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="imageModalLabel">Select an Image</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="file" id="imageInput" name="image" accept="image/*">
+                                <img id="selectedImage" src="" alt="Selected Image" style="max-width: 100%; display: none;">
+                                <div id="uploadingSpinner" class="d-none text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="sr-only">Uploading...</span>
+                                    </div>
+                                    <p>Uploading...</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="submitImageBtn">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Participants Card -->
                 <!-- Participants Card with Toggle Dropdown -->
                 <div class="col-md-6">
@@ -113,15 +141,17 @@
         </div>
     </div>
     
+    <div id="media-display">
+        <!-- The image or video will be displayed here -->
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="/socketConfig"></script>
     
-    <script src="/chat.js"></script>
+    <script type="module" src="/chat.js"></script>
     <script src="/fileHandle.js"></script>
 </body>
 </html>
