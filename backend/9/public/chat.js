@@ -17,7 +17,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const socket = io();
     socket.on('new-message',(message) =>{
-        fetchAllMessages()
+        appendMessage(message.name,message.message)
+    })
+    socket.on('new-file',(file) =>{
+        appendFile(file.name,file.file,file.id);
     })
 
     async function establishSocket(){
@@ -36,16 +39,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // handles adding new participant. calls addnewparticipant function
-    // after splitting th emembers phone number
+    // after splitting the members phone number
     const addParticipantForm = document.getElementById("add-participant-form");
     const phoneNumberInput = document.getElementById("phone-number")
     addParticipantForm.addEventListener("submit", function (e) {
-        e.preventDefault(); // Prevent the default form submission behavior
+        e.preventDefault(); 
 
         const membersString = phoneNumberInput.value;
         const membersArray = membersString.split(',').map(member => member.trim());
 
-        // Perform an Axios POST request to add a new participant
         addNewParticipant(membersArray);
     });
 
@@ -118,6 +120,19 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
         await renderMessagesAndFiles(messages);
+
+        const scrollPosition = localStorage.getItem('chatBoxScrollPosition');
+
+        if (scrollPosition !== null) {
+            // Check if the difference between scrollPosition and the bottom is significant
+            const significantDifference = chatBox.scrollHeight - scrollPosition > 600; // Adjust the threshold as needed
+
+            if (significantDifference) {
+              chatBox.scrollTop = parseInt(scrollPosition); // Scroll to the original position
+            } else {
+              chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+            }
+        }
     }
 
     async function appendMessage(senderName, text) {
@@ -196,9 +211,9 @@ document.addEventListener("DOMContentLoaded", function () {
         else if(!indexDbFile){
             await downloadBox(fileContainer,senderCol,fileLink,messageId)
         }
-        
-        const scrollPosition = localStorage.getItem('chatBoxScrollPosition');
 
+        const scrollPosition = localStorage.getItem('chatBoxScrollPosition');
+        
         if (scrollPosition !== null) {
             // Check if the difference between scrollPosition and the bottom is significant
             const significantDifference = chatBox.scrollHeight - scrollPosition > 600; // Adjust the threshold as needed
@@ -209,7 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {
               chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
             }
         }
-    }
+    } 
 
     async function downloadBox(fileContainer, senderCol, fileLink, messageId) {
         const fileCol = document.createElement("div");
@@ -539,10 +554,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     window.onload = async function () {
-        const scrollPosition = localStorage.getItem('chatBoxScrollPosition');
-        if (scrollPosition !== null) {
-            chatBox.scrollTop = parseInt(scrollPosition);
-        }
+        // const scrollPosition = localStorage.getItem('chatBoxScrollPosition');
+        // if (scrollPosition !== null) {
+        //     chatBox.scrollTop = parseInt(scrollPosition);
+        // }
         await establishSocket();
         await fetchAllMessages();
         await getAllParticipants();

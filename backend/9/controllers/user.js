@@ -17,7 +17,7 @@ exports.getSignup = (req,res,next) =>{
 exports.postSignup = async (req,res,next) =>{
     try{
         const {name,email,password,phone} = req.body
-
+    
         const user = await User.findOne({
             where:{
                 email:email
@@ -25,7 +25,7 @@ exports.postSignup = async (req,res,next) =>{
         })
 
         if(user){
-            return res.status(409).json({msg:"User already exists"})
+            return res.status(409).json({msg:"User with this email already exists"})
         }
 
         const hashedPassword = await bcrypt.hash(password,10)
@@ -60,7 +60,7 @@ exports.postLogin = async (req,res,next) =>{
         })
 
         if(!user){
-            res.status(404).json({message:"User Not Found!"})
+            return res.status(404).json({message:"User Not Found!"})
         }
 
         const passwordMatch = await bcrypt.compare(password,user.password)
@@ -79,6 +79,6 @@ exports.postLogin = async (req,res,next) =>{
         }
     }
     catch(error){
-        console.log(error)
+        res.status(500)({message:"Internal server error"})
     }
 }

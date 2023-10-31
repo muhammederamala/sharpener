@@ -1,18 +1,19 @@
 .signup-btn{
-    width: 120px;
-    height: 40px;
+    width: 75px;
     margin-top: 12rem;
-    background-color: white;
-    border: 2.5px solid crimson;
+    background-color: #007BFF ;
     border-radius: 5px;
     transition: transform 0.2s;
     font-weight: bold;
+    color: white;
+    margin-left: 3px;
 }
 
 .signup-btn:hover {
-    transform: scale(1.1); /* Scale the button up on hover (10% larger) */
+    transform: scale(1.1);
+    color: white;
 }
 
 .signup-btn:active {
-    transform: scale(1.1); /* Scale the button up when it's clicked (10% larger) */
+    transform: scale(1.1);
 }

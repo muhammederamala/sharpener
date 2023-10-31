@@ -119,8 +119,8 @@ exports.postSendFile = async (req,res,next) =>{
         const fileUrl = await uploadFileToS3(file,fileName,stringId);
         await newMessage.update({file:fileUrl})
 
-        io.emit('new-message', newMessage);
-        return res.status(201).json(newMessage)
+        io.emit('new-file', newMessage);
+        return res.status(201).json({messageId:newMessage.id})
     }
     catch(err){
         return res.status(500).json({Error:"Failed to send the message"});
@@ -269,8 +269,10 @@ exports.addNewParticipant = async (req,res,next) =>{
         const groupIdToken = req.query.groupId
         const groupId = decodeToken(groupIdToken,process.env.TOKEN_SECRET_KEY)
         const groupMembers = req.body.phoneNumber
+        const io = req.io
 
         await sendInvite(userId,groupMembers,groupId)
+        io.emit('new-invitation');
         return res.status(201).json({response})
     }
     catch(err){

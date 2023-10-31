@@ -1,3 +1,5 @@
+import { openIndexedDB, getFileFromIndexedDB } from './indexDBUtils.js';
+
 document.addEventListener("DOMContentLoaded", async function() {
     var selectedImage = null;
 
@@ -51,7 +53,15 @@ document.addEventListener("DOMContentLoaded", async function() {
                 fileName:image.name
             }
         });
-        // Handle the response from the server
-        console.log('Image uploaded successfully:', response.data);
+        const messageId = JSON.stringify(response.data.messageId)
+
+        if(response.status === 201){
+            const db = await openIndexedDB();
+            const transaction = db.transaction('groupStore', 'readwrite');
+            const objectStore = transaction.objectStore('groupStore');
+            objectStore.put(image,messageId);
+            db.close();
+            }   
+        return "succesful"
     }
 });

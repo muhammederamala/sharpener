@@ -1,5 +1,9 @@
 const socket = io();
 
+socket.on('new-invitation',()=>{
+    fetchInvites(); 
+})
+
 window.onload = function () {
     fetchInvites();
     fetchGroups();

@@ -11,32 +11,69 @@
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light px-3 mb-4">
-        <a class="navbar-brand" href="#">ChatApp</a>
+        <a class="navbar-brand" href=""><i class="fas fa-comments"></i>ChatApp</a>
         <!-- "Sign In" button -->
         <a class="btn border border-primary rounded ml-auto" href="/user/login">Sign In</a>
     </nav>
 
-    <div class="container">
+    <div class="container p-0 mb-3">
         <div class="row">
             <div class="col-md-6 text-center">
-                <div class="p-3" 
+                <div class="p-3 px-0" 
                     style="min-height: 450px; 
-                    background-image: url('../images/welcome.jpg'); 
+                    background-image: url('../images/welcome2.jpg');
+                    background-size: 300px 225px; 
                     background-size: cover; 
                     background-repeat: no-repeat; 
                     background-position: center;">
                     <!-- Content for the first div -->
-                    <a class="btn signup-btn" href="/user/signup">Sign Up!</a>
+                    <a class="btn signup-btn p-0" href="/user/signup">Sign Up!</a>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="p-3" style="min-height: 450px;">
                     <!-- Content for the second div -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Welcome to ChatApp</h5>
+                                    <p>ChatApp is where connections happen! Join our vibrant community and start chatting with friends, family, and new acquaintances.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Real-time Messaging</h5>
+                                    <p>Enjoy real-time messaging with secure and private conversations. ChatApp offers a seamless chatting experience with advanced features.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">User Privacy</h5>
+                                    <p>Your privacy is important to us. ChatApp ensures your data is secure and your conversations are private. We prioritize your confidentiality.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Get Started Now</h5>
+                                    <!-- Remove the last sentence here -->
+                                    <p>Get started by creating an account or sign in if you're already a member.</p>
+                                    <!-- Add a "Sign Up" button -->
+                                    <a class="btn btn-primary" href="/user/signup">Sign Up</a>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
