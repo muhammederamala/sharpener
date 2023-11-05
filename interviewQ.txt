@@ -1,0 +1,46 @@
+1. What is process.nextTick ?
+Ans: process.nextTick is a Node.js-specific function that allows you to schedule a callback function to be executed in the next iteration of the event loop. It's often used to defer the execution of a function until the current operation has completed and the event loop is about to enter the next tick.
+Here are some key points about process.nextTick:
+It's a way to ensure that a function is executed before other asynchronous operations in Node.js.
+Callbacks scheduled with process.nextTick will be executed before any timers (set by setTimeout or setInterval) or I/O operations.
+
+
+2. How to check if a variable is an array?
+Ans: .isArray()
+
+
+3. Difference between truncate and delete.
+Ans: TRUNCATE:
+	TRUNCATE is a DDL (Data Definition Language) command.
+	It's used to remove all the rows from a table quickly.
+	It's a minimally logged operation, making it faster and less resource-intensive.
+	It resets identity columns and foreign key constraints may need to be dropped and re-created.
+	You can't use a WHERE clause with TRUNCATE. It removes all rows.
+
+     DELETE:
+	DELETE is a DML (Data Manipulation Language) command.
+	It's used to remove specific rows from a table based on a condition.
+	It's fully logged, so it generates more transaction log and can be slower for large tables.
+	It doesn't reset identity columns and respects foreign key constraints.
+	You can use a WHERE clause with DELETE to specify which rows to remove.
+
+
+4. Types of indexing.
+Ans: Index Types: There are various types of indexes, but the two most common types are:
+     B-Tree (Balanced Tree) Indexes: These are commonly used for most database systems and support efficient querying.
+     Hash Indexes: These are used for exact-match queries and are suitable for scenarios where data distribution is relatively uniform.
+
+
+5. SetImmediate and process.nextTick.
+Ans: A function to be executed right after executing the script. Same as an asynchronous function with zero delay.
+setImmediate is executed in the next iteration of the event loop. After any callbacks or timers. This allows other asynchronous operations to be completed. In the case of process.nextTick, it is used to ensure that a callback is executed immediately after the current operation and in the current iteration of the event loop.
+
+
+
+
+
+
+
+
+
+

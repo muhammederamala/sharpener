@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const socket = io();
     socket.on('new-message',(message) =>{
-        appendMessage(message.name,message.message)
+        appendMessage("You",message.message)
     })
     socket.on('new-file',(file) =>{
         appendFile(file.name,file.file,file.id);
@@ -177,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
               chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
             }
         }
-
+        document.body.scrollTop = 0;
     }
 
     async function appendFile(senderName, fileLink,messageId) {

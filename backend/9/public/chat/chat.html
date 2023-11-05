@@ -39,7 +39,7 @@
         </div>
     </nav>
 
-    <div class="container mt-5">
+    <div class="container mt-5" id="chat-page">
         <div class="row">
             <!-- Chat Card -->
             <div class="col-md-6">
@@ -56,7 +56,8 @@
                                     <button class="btn" data-toggle="modal" data-target="#imageModal">
                                         <i class="fas fa-plus"></i>
                                     </button>                                    
-                                    <input type="file" id="file-input-modal" style="display: none;">
+                                    <input type="file" id="file-input-modal" style="display: none;"
+                                    accept="image/*, video/*, .pdf, .doc, .docx">
                                 </div>
                                 <input 
                                 type="text" 
@@ -82,8 +83,9 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <input type="file" id="imageInput" name="image" accept="image/*">
-                                <img id="selectedImage" src="" alt="Selected Image" style="max-width: 100%; display: none;">
+                                <input type="file" id="fileInput" name="image"
+                                accept="image/*, video/*, .pdf, .doc, .docx">
+                                <div id="mediaContainer"></div> <!-- Placeholder for dynamically created element -->
                                 <div id="uploadingSpinner" class="d-none text-center">
                                     <div class="spinner-border text-primary" role="status">
                                         <span class="sr-only">Uploading...</span>
@@ -144,7 +146,7 @@
     <div id="media-display">
         <!-- The image or video will be displayed here -->
     </div>
-
+    
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>

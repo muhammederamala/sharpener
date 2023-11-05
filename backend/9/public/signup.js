@@ -81,3 +81,35 @@ async function login(e){
         }
     }
 }
+
+document.addEventListener("DOMContentLoaded", function(){
+    document.getElementById('sign-in').addEventListener('click', (e) =>{
+        chechIfLoggedIn();
+    })
+
+    async function chechIfLoggedIn(){
+        const token = localStorage.getItem("Token")
+        const urlParams = new URLSearchParams(window.location.search);
+        const baseURL = window.location.protocol + '//' + window.location.host;
+        const payload = {
+            token : token,
+        }
+        try{
+            const response = await axios.post(`${baseURL}/check-login`,payload);
+            console.log(response)
+            if(response.status === 200){
+                window.location.href = '/chat'
+            }
+        }
+        catch(err){
+            console.log(err)
+            if(err.response.status === 401){
+                window.location.href = '/user/login'
+            }
+            else if (err.data.status === 500){
+                console.log("Internal server error")
+            }
+        }
+
+    }
+})
