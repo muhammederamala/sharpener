@@ -2,3 +2,4 @@
 server.cert
 server.key
 expensetracker.pem
+node_modules
