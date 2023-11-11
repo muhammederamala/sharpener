@@ -4,7 +4,8 @@
 4. create node server
 5. chat app
 6. Node project test , create a blog website
-7. Expense tracker along with AWS
+7. Expense tracker along with AWS using mySql
 8. Type script
 9. Groupd chat app
-10. mongoDB
+10. Ecommerce site mongoDB
+11. Expense tracker using mongo db

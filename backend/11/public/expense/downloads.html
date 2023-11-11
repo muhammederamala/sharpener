@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Expense tracker</title>
+</head>
+<body>
+
+<!-- Updated table element with Bootstrap classes and borders -->
+<table class="table table-bordered">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Type</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody id="download-list">
+        <!-- Table rows will be inserted here -->
+    </tbody>
+</table>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/expense/download.js"></script>
+</body>
+</html>
