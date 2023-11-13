@@ -27,9 +27,13 @@ function App() {
     },
   ];
 
+  const addExpenseHandler = expense =>{
+    console.log('app.js',expense)
+  }
+
   return (
     <div>
-      <NewExpense/>
+      <NewExpense onAddExpense={addExpenseHandler}/>
       {expenses.map((expense,index)=>{
         return <ExpenseItem key={index} expense={expense}/>
       })}
