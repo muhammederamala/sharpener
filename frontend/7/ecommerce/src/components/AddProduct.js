@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function AddProduct() {
+function AddProduct({onProductAdded}) {
   const [productName, setProductName] = useState("");
   const [productPrice, setProductPrice] = useState("");
   const [productDescription, setProductDescription] = useState("");
@@ -31,6 +31,8 @@ function AddProduct() {
     existingProducts.push(product);
 
     localStorage.setItem("Products", JSON.stringify(existingProducts));
+
+    onProductAdded()
     
     setProductCategory ('')
     setProductDescription ('')
