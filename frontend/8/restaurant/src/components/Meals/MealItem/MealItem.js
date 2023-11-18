@@ -1,38 +1,22 @@
-import React, { useContext, useState } from "react";
+import React,{useContext} from "react";
 
 import classes from "./MealItem.module.css";
 import MealItemForm from "./MealItemForm";
 import CartContext from "../../../store/cart-context";
 
 function MealItem(props) {
+  const cartCtx =  useContext(CartContext)
   const price = `$${props.price}`;
 
-  const cartContext = useContext(CartContext);
-
-  // const addToCartHandler = (amount) => {
-  //   cartContext.addItem(amount);
-  // };
-
-  const [enteredAmount, setEnteredAmount] = useState(1);
-  const [selectedItem, setSelectedItem] = useState([]);
-
-  const amountChangeHandler = (value) => {
-    console.log("this is running",value)
-    setEnteredAmount(value);
-  };
-
-  const submitHandler = () => {
-    console.log(props.id,props.name,props.price,enteredAmount)
-    setSelectedItem({
+  const addToCartHandler = (amount) =>{
+    cartCtx.addItem({
       id:props.id,
       name:props.name,
-      amount: +enteredAmount,
+      amount:amount,
       price:props.price
     })
-    
-    cartContext.addItem(selectedItem)
-  };
-
+  }
+ 
   return (
     <li className={classes.meal}>
       <div>
@@ -41,12 +25,7 @@ function MealItem(props) {
         <div className={classes.price}>{price}</div>
       </div>
       <div>
-        <MealItemForm
-          // onAddToCart={addToCartHandler}
-          value={enteredAmount}
-          onSubmit={submitHandler}
-          onChange={amountChangeHandler}
-        />
+        <MealItemForm onAddToCart={addToCartHandler} />
       </div>
     </li>
   );
