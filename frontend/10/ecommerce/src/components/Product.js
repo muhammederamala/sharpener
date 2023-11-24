@@ -12,7 +12,6 @@ function Product(props) {
             <div className="card-body">
               <h5 className="card-title">{product.title}</h5>
               <p className="card-text">Price: ${product.price}</p>
-              {/* You can add more details or features here */}
               <a href="#" className="btn btn-primary">
                 Add to Cart
               </a>
