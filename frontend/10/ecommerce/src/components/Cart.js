@@ -1,36 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Modal, Button, Card, Row, Col } from 'react-bootstrap';
 import { FaTrash } from 'react-icons/fa';
 
-function Cart({ showModal, handleClose }) {
-  const cartElements = [
-    {
-      title: 'Colors',
-      price: 100,
-      imageUrl: 'https://prasadyash2411.github.io/ecom-website/img/Album%201.png',
-      quantity: 2,
-    },
-    {
-      title: 'Black and white Colors',
-      price: 50,
-      imageUrl: 'https://prasadyash2411.github.io/ecom-website/img/Album%202.png',
-      quantity: 3,
-    },
-    {
-      title: 'Yellow and Black Colors',
-      price: 70,
-      imageUrl: 'https://prasadyash2411.github.io/ecom-website/img/Album%203.png',
-      quantity: 1,
-    },
-  ];
+import CartContext from '../store/cart-context';
+
+function Cart(props) {
+  const cartCtx = useContext(CartContext)
+
+  const cartElements = cartCtx.products
 
   const handleRemoveItem = (index) => {
     // Add logic to remove item from the cart
     console.log(`Remove item at index ${index}`);
   };
-
   return (
-    <Modal show={showModal} onHide={handleClose} size="lg">
+    <Modal show={cartCtx.showModal} onHide={cartCtx.hideCartHandler} size="lg">
       <Modal.Header closeButton>
         <h1 className="modal-title fs-5">Shopping Cart</h1>
       </Modal.Header>
@@ -45,7 +29,7 @@ function Cart({ showModal, handleClose }) {
                   <Card.Text>
                     Price: ${item.price}
                     <br />
-                    Quantity: {item.quantity}
+                    Quantity: {item.qty}
                   </Card.Text>
                   <Button
                   variant="danger"
@@ -61,10 +45,10 @@ function Cart({ showModal, handleClose }) {
         </Row>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="secondary" onClick={cartCtx.hideCartHandler} >
           Close
         </Button>
-        <Button variant="primary" onClick={handleClose}>
+        <Button variant="primary" onClick={cartCtx.hideCartHandler}>
           Proceed to Checkout
         </Button>
       </Modal.Footer>

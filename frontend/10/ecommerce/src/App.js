@@ -1,25 +1,34 @@
-import react, { Fragment, useState } from "react";
+import react, { Fragment, useContext, useState } from "react";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+} from "react-router-dom";
 
-import Products from "./components/Products";
 import Navbar from "./Header/Navbar";
-import Cart from "./components/Cart";
+import HomeScreen from "./screens/HomeScreen";
+import AboutScreen from "./screens/AboutScreen";
 import { CartProvider } from "./store/CartProvider";
+import CartContext from "./store/cart-context";
+import Cart from "./components/Cart";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route element={<Navbar />}>
+      <Route path="/" element={<HomeScreen />} />
+      <Route path="/about" element={<AboutScreen />} />
+    </Route>
+  )
+);
 
 function App() {
-  const [showModal, setShowModal] = useState(false);
-
-  const handleShowModal = () => {
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
+  const cartCtx = useContext(CartContext);
+  
   return (
     <CartProvider>
-      {showModal && <Cart showModal={showModal} handleClose={handleCloseModal}/> }
-      <Navbar onShow={handleShowModal}/>
-      <Products />
+      <Cart/>
+      <RouterProvider router={router} />
     </CartProvider>
   );
 }
