@@ -15,8 +15,8 @@ function Navbar(props) {
 
   return (
     <Fragment>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light p-3">
-        <a className="navbar-brand">Ecommerce</a>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light p-3" style={{borderBottom:"1px solid black"}}>
+        <a className="navbar-brand"><strong>MUSIC</strong></a>
         <button
           className="navbar-toggler"
           type="button"
@@ -33,18 +33,18 @@ function Navbar(props) {
           id="navbarNav"
         >
           <ul className="navbar-nav">
-            <li className="nav-item active" style={liStyle}>
-              <a className="nav-link" href="/">
+            <li className="nav-item" style={liStyle}>
+              <NavLink className="nav-link" to="/">
                 Home
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item" style={liStyle}>
-              <a className="nav-link" href="/products">
-                Products
-              </a>
+              <NavLink className="nav-link" to="/store">
+                store
+              </NavLink>
             </li>
             <li className="nav-item" style={liStyle}>
-              <NavLink className="nav-link pending" to='/about'>
+              <NavLink className="nav-link" to='/about'>
                 About Us
               </NavLink>
             </li>

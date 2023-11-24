@@ -12,11 +12,13 @@ import AboutScreen from "./screens/AboutScreen";
 import { CartProvider } from "./store/CartProvider";
 import CartContext from "./store/cart-context";
 import Cart from "./components/Cart";
+import StoreScreen from "./screens/StoreScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Navbar />}>
       <Route path="/" element={<HomeScreen />} />
+      <Route path="/store" element={<StoreScreen />} />
       <Route path="/about" element={<AboutScreen />} />
     </Route>
   )

@@ -1,0 +1,38 @@
+.welcomeContainer {
+  padding-top: 40px;
+  min-height: 400px;
+  background-image: url("https://images.pexels.com/photos/1616516/pexels-photo-1616516.jpeg?auto=compress&cs=tinysrgb&w=600");
+  background-repeat: no-repeat; /* Set background image to not repeat */
+  background-size: cover;
+}
+
+.mainTitle {
+  text-align: center;
+  font-size: 80px;
+  font-family: "Helvetica Neue";
+}
+
+.centerButton {
+  display: flex;
+  justify-content: center;
+}
+
+.centerButton button {
+  margin-top: 40px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: transparent;
+  border: 2px solid black;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.centerButton svg {
+  margin-top: 40px;
+}
+
+.centerButton h1{
+  margin-top: 50px;
+  font-family: "Helvetica Neue";
+  font-weight: bold;
+}
