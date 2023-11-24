@@ -3,6 +3,7 @@ import react, { Fragment, useState } from "react";
 import Products from "./components/Products";
 import Navbar from "./Header/Navbar";
 import Cart from "./components/Cart";
+import { CartProvider } from "./store/CartProvider";
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -15,11 +16,11 @@ function App() {
     setShowModal(false);
   };
   return (
-    <Fragment>
+    <CartProvider>
       {showModal && <Cart showModal={showModal} handleClose={handleCloseModal}/> }
       <Navbar onShow={handleShowModal}/>
       <Products />
-    </Fragment>
+    </CartProvider>
   );
 }
 

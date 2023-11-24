@@ -1,38 +1,35 @@
-import React, { createContext, useReducer } from "react";
+import React, { useReducer } from "react";
 
-const CartContext = createContext({
-  products: [],
-  totalQty: 0,
-  addToCart: () => {},
-});
+import CartContext from "./cart-context";
 
 const defaultCartState = {
   products: [],
+  totalQty: 0
 };
 
 const cartReducer = (state, action) => {
   if (action.type === "ADD") {
     const existingProductIndex = state.products.findIndex(
-      (product) => product.id === action.product.id
+      (product) => product.id === action.products.id
     );
 
     const updatedProducts = [...state.products];
 
     if (existingProductIndex !== -1) {
-      updatedProducts[existingProductIndex].qty += 1;
+      updatedProducts[existingProductIndex].qty = +1;
     } else {
       updatedProducts.push({
         ...action.product,
         qty: 1,
       });
     }
-
+    const updatedQty = state.totalQty + 1;
     return {
       ...state,
       products: updatedProducts,
+      totalQty: updatedQty,
     };
   }
-
   return state;
 };
 
@@ -43,20 +40,16 @@ export const CartProvider = ({ children }) => {
   );
 
   const addToCartHandler = (product) => {
-    dispatchCartAction({ type: "ADD", product: product });
+    dispatchCartAction({ type: "ADD", products: product });
   };
 
   const cartContext = {
-    cart: cartState.products,
-    totalQty: cartState.products.reduce((total, product) => total + product.qty, 0),
+    products: cartState.products,
+    totalQty: cartState.totalQty,
     addToCart: addToCartHandler,
   };
 
   return (
-    <CartContext.Provider value={cartContext}>
-      {children}
-    </CartContext.Provider>
+    <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>
   );
 };
-
-export default CartContext;

@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from "react";
+
+import CartContext from "../store/cart-context";
 
 function Navbar(props) {
-  const liStyle = { minWidth: '100px' }; // Adjust the min-width as needed
+  const cartCtx = useContext(CartContext)
+
+  const liStyle = { minWidth: "100px" };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light p-3">
-      <a className="navbar-brand">
-        Ecommerce
-      </a>
+      <a className="navbar-brand">Ecommerce</a>
       <button
         className="navbar-toggler"
         type="button"
@@ -19,7 +21,10 @@ function Navbar(props) {
       >
         <span className="navbar-toggler-icon"></span>
       </button>
-      <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <div
+        className="collapse navbar-collapse justify-content-end"
+        id="navbarNav"
+      >
         <ul className="navbar-nav">
           <li className="nav-item active" style={liStyle}>
             <a className="nav-link" href="/">
@@ -37,8 +42,11 @@ function Navbar(props) {
             </a>
           </li>
         </ul>
-        <button className="btn btn-outline-success my-2 my-sm-0" onClick={props.onShow} >
-          Cart
+        <button
+          className="btn btn-outline-success my-2 my-sm-0"
+          onClick={props.onShow}
+        >
+          Cart ({cartCtx.totalQty})
         </button>
       </div>
     </nav>

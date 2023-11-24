@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
+
+import CartContext from '../store/cart-context';
 
 function Product(props) {
+  const cartCtx = useContext(CartContext)
+
   const { products } = props;
+
+  const addToCartHandler = (product) => {
+    cartCtx.addToCart(product)
+  };
 
   return (
     <div className="row">
@@ -12,9 +20,12 @@ function Product(props) {
             <div className="card-body">
               <h5 className="card-title">{product.title}</h5>
               <p className="card-text">Price: ${product.price}</p>
-              <a href="#" className="btn btn-primary">
+              <button
+                className="btn btn-primary"
+                onClick={() => addToCartHandler(product)}
+              >
                 Add to Cart
-              </a>
+              </button>
             </div>
           </div>
         </div>
