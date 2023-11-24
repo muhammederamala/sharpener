@@ -1,9 +1,10 @@
 import React from "react";
+import CartIcon from "./CartIcon";
 
 function Navbar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div className="container" style={{ padding: "10px" }}>
         <a className="navbar-brand" href="/">
           Tshirts
         </a>
@@ -24,7 +25,7 @@ function Navbar() {
         >
           <ul className="navbar-nav">
             <li className="nav-item">
-              <button className="btn btn-outline-light">Cart</button>
+              <CartIcon />
             </li>
           </ul>
         </div>

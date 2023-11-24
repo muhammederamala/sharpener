@@ -1,31 +1,23 @@
 import React, { useContext, useState } from "react";
 import { Card, Row, Col, Form, Button } from "react-bootstrap";
+
 import ProductContext from "../store/product-context";
+import CartContext from '../store/cart-context'
 
 function Products() {
   const { products } = useContext(ProductContext);
+  const { addToCart } = useContext(CartContext)
   const [selectedSize, setSelectedSize] = useState(""); // State to track selected size for each product
 
   const handleSizeChange = (productId, size) => {
-    // Update the selected size for the corresponding product
     setSelectedSize((prevSizes) => ({
       ...prevSizes,
       [productId]: size,
     }));
   };
 
-  const handleAddToCart = (productId) => {
-    // Handle adding the product to the cart with selected size
-    const selectedProduct = products.find(
-      (product) => product.id === productId
-    );
-    console.log(
-      "Add to Cart:",
-      selectedProduct,
-      "Selected Size:",
-      selectedSize[productId]
-    );
-    // Add your logic to update the cart state or perform other actions
+  const handleAddToCart = (selectedProduct) => {
+    addToCart(selectedProduct);
   };
 
   return (
@@ -54,9 +46,15 @@ function Products() {
                         }
                       >
                         <option value="">-- Select Size --</option>
-                        <option value="small">Small ({product.smallStock})</option>
-                        <option value="medium">Medium ({product.mediumStock})</option>
-                        <option value="large">Large ({product.largeStock})</option>
+                        <option value="small">
+                          Small ({product.smallStock})
+                        </option>
+                        <option value="medium">
+                          Medium ({product.mediumStock})
+                        </option>
+                        <option value="large">
+                          Large ({product.largeStock})
+                        </option>
                       </Form.Control>
                     </Form.Group>
                     <Button
