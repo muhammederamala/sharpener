@@ -1,33 +1,34 @@
 import React, { useContext } from 'react';
-
+import { Link } from 'react-router-dom'; 
+import Card from 'react-bootstrap/Card'; 
+import Button from 'react-bootstrap/Button'; 
 import CartContext from '../store/cart-context';
 
 function Product(props) {
-  const cartCtx = useContext(CartContext)
+  const cartCtx = useContext(CartContext);
 
   const { products } = props;
 
   const addToCartHandler = (product) => {
-    cartCtx.addToCart(product)
+    cartCtx.addToCart(product);
   };
 
   return (
     <div className="row">
       {products.map((product, index) => (
         <div key={index} className="col-md-4 mb-4">
-          <div className="card" style={{ width: '18rem' }}>
-            <img src={product.imageUrl} className="card-img-top" alt={product.title} />
-            <div className="card-body">
-              <h5 className="card-title">{product.title}</h5>
-              <p className="card-text">Price: ${product.price}</p>
-              <button
-                className="btn btn-primary"
-                onClick={() => addToCartHandler(product)}
-              >
-                Add to Cart
-              </button>
-            </div>
-          </div>
+          <Link to={`/store/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Card style={{ width: '18rem' }}>
+              <Card.Img variant="top" src={product.imageUrl} alt={product.title} />
+              <Card.Body>
+                <Card.Title>{product.title}</Card.Title>
+                <Card.Text>Price: ${product.price}</Card.Text>
+                <Button variant="primary" onClick={() => addToCartHandler(product)}>
+                  Add to Cart
+                </Button>
+              </Card.Body>
+            </Card>
+          </Link>
         </div>
       ))}
     </div>

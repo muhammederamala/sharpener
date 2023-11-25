@@ -6,14 +6,20 @@ import {
   Route,
 } from "react-router-dom";
 
-import Navbar from "./Header/Navbar";
-import HomeScreen from "./screens/HomeScreen";
-import AboutScreen from "./screens/AboutScreen";
+// context
 import { CartProvider } from "./store/CartProvider";
 import CartContext from "./store/cart-context";
+import ProductContext from "./store/product-context";
+import ProductProvider from "./store/ProductProvider";
+
+// components and screens
 import Cart from "./components/Cart";
 import StoreScreen from "./screens/StoreScreen";
 import ContactScreen from "./screens/ContactScreen";
+import ProductDetailsScreen from "./screens/ProductDetailsScreen";
+import Navbar from "./Header/Navbar";
+import HomeScreen from "./screens/HomeScreen";
+import AboutScreen from "./screens/AboutScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,19 +27,22 @@ const router = createBrowserRouter(
       <Route path="/" element={<HomeScreen />} />
       <Route path="/store" element={<StoreScreen />} />
       <Route path="/about" element={<AboutScreen />} />
-      <Route path='/contact' element={<ContactScreen />} />
+      <Route path="/contact" element={<ContactScreen />} />
+      <Route path="/store/:id" element={<ProductDetailsScreen />} />
     </Route>
   )
 );
 
 function App() {
   const cartCtx = useContext(CartContext);
-  
+
   return (
-    <CartProvider>
-      <Cart/>
-      <RouterProvider router={router} />
-    </CartProvider>
+    <ProductProvider>
+      <CartProvider>
+        <Cart />
+        <RouterProvider router={router} />
+      </CartProvider>
+    </ProductProvider>
   );
 }
 
