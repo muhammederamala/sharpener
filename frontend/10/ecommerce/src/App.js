@@ -13,6 +13,7 @@ import { CartProvider } from "./store/CartProvider";
 import CartContext from "./store/cart-context";
 import Cart from "./components/Cart";
 import StoreScreen from "./screens/StoreScreen";
+import ContactScreen from "./screens/ContactScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<HomeScreen />} />
       <Route path="/store" element={<StoreScreen />} />
       <Route path="/about" element={<AboutScreen />} />
+      <Route path='/contact' element={<ContactScreen />} />
     </Route>
   )
 );

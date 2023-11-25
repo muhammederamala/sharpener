@@ -48,6 +48,11 @@ function Navbar(props) {
                 About Us
               </NavLink>
             </li>
+            <li className="nav-item" style={liStyle}>
+              <NavLink className="nav-link" to='/contact'>
+                Contact
+              </NavLink>
+            </li>
           </ul>
           <button
             className="btn btn-outline-success my-2 my-sm-0"
