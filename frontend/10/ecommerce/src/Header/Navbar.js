@@ -1,22 +1,36 @@
 import React, { Fragment, useContext } from "react";
-
-import CartContext from "../store/cart-context";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 
+import CartContext from "../store/cart-context";
+import AuthContext from "../store/auth-context";
+
 function Navbar(props) {
+  const navigate = useNavigate();
+
   const cartCtx = useContext(CartContext);
+  const authCtx = useContext(AuthContext);
 
   const liStyle = { minWidth: "100px" };
 
-  const showCartHandler = () =>{
-    cartCtx.showCartHandler()
-  }
+  const showCartHandler = () => {
+    cartCtx.showCartHandler();
+  };
+
+  const logoutHandler = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   return (
     <Fragment>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light p-3" style={{borderBottom:"1px solid black"}}>
-        <a className="navbar-brand"><strong>MUSIC</strong></a>
+      <nav
+        className="navbar navbar-expand-lg navbar-light bg-light py-3"
+        style={{ borderBottom: "1px solid black" }}
+      >
+        <a className="navbar-brand p-2">
+          <strong>MUSIC</strong>
+        </a>
         <button
           className="navbar-toggler"
           type="button"
@@ -33,26 +47,40 @@ function Navbar(props) {
           id="navbarNav"
         >
           <ul className="navbar-nav">
-            <li className="nav-item" style={liStyle}>
+            <li className="nav-item p-1" style={liStyle}>
               <NavLink className="nav-link" to="/">
                 Home
               </NavLink>
             </li>
-            <li className="nav-item" style={liStyle}>
+            <li className="nav-item p-1" style={liStyle}>
               <NavLink className="nav-link" to="/store">
-                store
+                Store
               </NavLink>
             </li>
-            <li className="nav-item" style={liStyle}>
-              <NavLink className="nav-link" to='/about'>
+            <li className="nav-item p-1" style={liStyle}>
+              <NavLink className="nav-link" to="/about">
                 About Us
               </NavLink>
             </li>
-            <li className="nav-item" style={liStyle}>
-              <NavLink className="nav-link" to='/contact'>
+            <li className="nav-item p-1" style={liStyle}>
+              <NavLink className="nav-link" to="/contact">
                 Contact
               </NavLink>
             </li>
+            {authCtx.isLoggedIn && (
+              <li className="nav-item p-1" style={liStyle}>
+                <button className="nav-link" onClick={logoutHandler}>
+                  Logout
+                </button>
+              </li>
+            )}
+            {!authCtx.isLoggedIn && (
+              <li className="nav-item p-1" style={liStyle}>
+                <NavLink className="nav-link" to="/signup">
+                  Signup
+                </NavLink>
+              </li>
+            )}
           </ul>
           <button
             className="btn btn-outline-success my-2 my-sm-0"
