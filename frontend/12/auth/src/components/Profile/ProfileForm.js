@@ -1,9 +1,11 @@
 import { useRef,useContext } from "react";
+import { useNavigate } from "react-router";
 
 import classes from "./ProfileForm.module.css";
 import AuthContext from '../../store/auth-context'
 
 const ProfileForm = () => {
+  const navigate = useNavigate()
   const newPasswordRef = useRef();
 
   const authCtx = useContext(AuthContext)
@@ -24,7 +26,7 @@ const ProfileForm = () => {
         "Content-Type": 'application/json'
       }
     }).then(res =>{
-      console.log(res)
+      navigate('/auth')
     })
   };
   return (
