@@ -8,6 +8,10 @@ const MainNavigation = () => {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
 
+  const logoutHandler = () =>{
+    authCtx.logout()
+  }
+
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="p-3">
       <Navbar.Brand href="#home">React Auth</Navbar.Brand>
@@ -32,7 +36,7 @@ const MainNavigation = () => {
             </NavLink>
           )}
           {isLoggedIn && (
-            <Button variant="outline-danger" className="mx-2">
+            <Button onClick={logoutHandler} variant="outline-danger" className="mx-2">
               Logout
             </Button>
           )}
