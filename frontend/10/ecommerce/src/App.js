@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   RouterProvider,
   createBrowserRouter,
@@ -8,9 +8,8 @@ import {
 
 // context
 import { CartProvider } from "./store/CartProvider";
-import CartContext from "./store/cart-context";
 import ProductProvider from "./store/ProductProvider";
-import { AuthContextProvider } from "./store/auth-context";
+import AuthContext from "./store/auth-context";
 
 // components and screens
 import Cart from "./components/Cart";
@@ -23,32 +22,34 @@ import AboutScreen from "./screens/AboutScreen";
 import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route element={<Navbar />}>
-      <Route path="/" element={<HomeScreen />} />
-      <Route path="/signup" element={<SignupScreen />} />
-      <Route path="/login" element={<LoginScreen />} />
-      <Route path="/store" element={<StoreScreen />} />
-      <Route path="/about" element={<AboutScreen />} />
-      <Route path="/contact" element={<ContactScreen />} />
-      <Route path="/store/:id" element={<ProductDetailsScreen />} />
-    </Route>
-  )
-);
-
 function App() {
-  const cartCtx = useContext(CartContext);
+  const authCtx = useContext(AuthContext);
+  const [loggedInStatus , setLoggedInstatus] = useState()
 
+  useEffect(()=>{
+    setLoggedInstatus(authCtx.isLoggedIn)
+  },[authCtx.isLoggedIn])
+
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route element={<Navbar />}>
+        <Route path="/" element={<HomeScreen />} />
+        <Route path="/signup" element={<SignupScreen />} />
+        <Route path="/login" element={<LoginScreen />} />
+        <Route path='/store' element={loggedInStatus ? <StoreScreen /> : <LoginScreen/> } />
+        <Route path="/about" element={<AboutScreen />} />
+        <Route path="/contact" element={<ContactScreen />} />
+        <Route path="/store/:id" element={<ProductDetailsScreen />} />
+      </Route>
+    )
+  );
   return (
-    <AuthContextProvider>
       <ProductProvider>
         <CartProvider>
           <Cart />
           <RouterProvider router={router} />
         </CartProvider>
       </ProductProvider>
-    </AuthContextProvider>
   );
 }
 

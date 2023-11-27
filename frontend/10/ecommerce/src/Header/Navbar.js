@@ -52,11 +52,20 @@ function Navbar(props) {
                 Home
               </NavLink>
             </li>
-            <li className="nav-item p-1" style={liStyle}>
-              <NavLink className="nav-link" to="/store">
-                Store
-              </NavLink>
-            </li>
+            {authCtx.isLoggedIn && (
+              <li className="nav-item p-1" style={liStyle}>
+                <NavLink className="nav-link" to="/store">
+                  Store
+                </NavLink>
+              </li>
+            )}
+            {!authCtx.isLoggedIn && (
+              <li className="nav-item p-1" style={liStyle}>
+                <NavLink className="nav-link" to="/login">
+                  Store
+                </NavLink>
+              </li>
+            )}
             <li className="nav-item p-1" style={liStyle}>
               <NavLink className="nav-link" to="/about">
                 About Us

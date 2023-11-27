@@ -7,31 +7,37 @@ import Footer from '../Header/Footer'
 function HomeScreen(props) {
   const concertEvents = [
     {
+      id:1,
       date: "JUL 16",
       location: "DETROIT, MI",
       venue: "DTE ENERGY MUSIC THEATRE",
     },
     {
+      id:2,
       date: "JUL 19",
       location: "TORONTO, ON",
       venue: "BUDWEISER STAGE",
     },
     {
+      id:3,
       date: "JUL 22",
       location: "BRISTOW, VA",
       venue: "JIGGY LUBE LIVE",
     },
     {
+      id:4,
       date: "JUL 29",
       location: "PHOENIX, AZ",
       venue: "AK-CHIN PAVILION",
     },
     {
+      id:5,
       date: "AUG 2",
       location: "LAS VEGAS, NV",
       venue: "T-MOBILE ARENA",
     },
     {
+      id:6,
       date: "AUG 7",
       location: "CONCORD, CA",
       venue: "CONCORD PAVILION",
@@ -51,7 +57,7 @@ function HomeScreen(props) {
             width="50"
             height="50"
             fill="currentColor"
-            class="bi bi-play-circle"
+            className="bi bi-play-circle"
             viewBox="0 0 16 16"
           >
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
@@ -61,7 +67,7 @@ function HomeScreen(props) {
       </div>
       <h1 className={classes.centerButton}>Tours</h1>
       {concertEvents.map(event =>{
-        return <TourList event={event} />
+        return <TourList key={event.id} event={event} />
       })}
       <div style={{minHeight:"50px"}}></div>
       <Footer/>
