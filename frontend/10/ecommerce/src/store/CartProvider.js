@@ -1,15 +1,20 @@
 import React, { useReducer, useCallback } from "react";
+import axios from "axios";
 
 import CartContext from "./cart-context";
 
+const { email } = JSON.parse(localStorage.getItem("user")) || {
+  email: null,
+};
+
 const defaultCartState = {
+  email:email,
   products: [],
   totalQty: 0,
   showModal: false,
 };
 
 const cartReducer = (state, action) => {
-  console.log("this ran")
   if (action.type === "ADD") {
     const existingProductIndex = state.products.findIndex(
       (product) => product.id === action.products.id
@@ -19,7 +24,7 @@ const cartReducer = (state, action) => {
 
     if (existingProductIndex !== -1) {
       updatedProducts[existingProductIndex].qty += 1;
-      console.log(updatedProducts[existingProductIndex])
+      console.log(updatedProducts[existingProductIndex]);
     } else {
       updatedProducts.push({
         ...action.products,
@@ -42,6 +47,11 @@ const cartReducer = (state, action) => {
       ...state,
       showModal: false,
     };
+  } else if (action.type === "USER") {
+    return {
+      ...state,
+      email: action.email,
+    };
   }
   return state;
 };
@@ -52,10 +62,22 @@ export const CartProvider = ({ children }) => {
     defaultCartState
   );
 
-  const addToCartHandler = useCallback((product) => {
-    console.log("this ran")
+  const addToCartHandler = async (product, email) => {
+    const updatedEmail = email.replace(/[@.]/g, "");
     dispatchCartAction({ type: "ADD", products: product });
-  }, [dispatchCartAction]);
+    dispatchCartAction({ type: "USER", email: updatedEmail });
+
+    const payload = {
+      products: cartState.products,
+      email: cartState.email,
+    };
+
+    const response = await axios.post(
+      `https://crudcrud.com/api/b1d32e7455d140f2bf91105eb4e49c69/cart${updatedEmail}`,
+      payload
+    );
+    console.log(response);
+  };
 
   const showCartHandler = () => {
     dispatchCartAction({ type: "TOGGLE-SHOW" });
@@ -67,6 +89,7 @@ export const CartProvider = ({ children }) => {
 
   const cartContext = {
     addToCart: addToCartHandler,
+    email: cartState.email,
     products: cartState.products,
     totalQty: cartState.totalQty,
     showModal: cartState.showModal,

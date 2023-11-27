@@ -41,7 +41,7 @@ function LoginScreen() {
           },
         }
       );
-      authCtx.logIn(response.data.idToken);
+      authCtx.logIn(response.data.idToken,body.email);
       navigate("/");
     } catch (err) {
       console.log(err);
