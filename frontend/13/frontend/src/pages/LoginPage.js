@@ -34,7 +34,7 @@ function LoginPage() {
         "http://localhost:4000/user/login",
         loginDetails
       );
-      localStorage.setItem('Token',JSON.stringify(response.data.token))
+      localStorage.setItem('Token',response.data.token)
       navigate("/");
       setFormData({
         name: "",
