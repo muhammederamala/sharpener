@@ -8,6 +8,7 @@ const CartContext = createContext({
   showCartHandler: () =>{},
   addToCart: () => {},
   hideCartHandler: () => {},
+  removeFromCart: () => {}
 });
 
 export default CartContext

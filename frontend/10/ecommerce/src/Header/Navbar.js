@@ -1,25 +1,30 @@
-import React, { Fragment, useContext } from "react";
-import { Outlet, useNavigate } from "react-router";
+import React, { Fragment, useContext, useEffect, useState } from "react";
+import { Outlet } from "react-router";
 import { NavLink } from "react-router-dom";
 
 import CartContext from "../store/cart-context";
 import AuthContext from "../store/auth-context";
 
 function Navbar(props) {
-  const navigate = useNavigate();
 
   const cartCtx = useContext(CartContext);
   const authCtx = useContext(AuthContext);
 
   const liStyle = { minWidth: "100px" };
 
+  const [cartQty, setCartQty] = useState()
+
+  useEffect(()=>{
+    setCartQty(cartCtx.totalQty)
+  },[cartCtx.totalQty])
+
   const showCartHandler = () => {
     cartCtx.showCartHandler();
   };
 
   const logoutHandler = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
   };
 
   return (
@@ -52,20 +57,11 @@ function Navbar(props) {
                 Home
               </NavLink>
             </li>
-            {authCtx.isLoggedIn && (
-              <li className="nav-item p-1" style={liStyle}>
-                <NavLink className="nav-link" to="/store">
-                  Store
-                </NavLink>
-              </li>
-            )}
-            {!authCtx.isLoggedIn && (
-              <li className="nav-item p-1" style={liStyle}>
-                <NavLink className="nav-link" to="/login">
-                  Store
-                </NavLink>
-              </li>
-            )}
+            <li className="nav-item p-1" style={liStyle}>
+              <NavLink className="nav-link" to="/store">
+                Store
+              </NavLink>
+            </li>
             <li className="nav-item p-1" style={liStyle}>
               <NavLink className="nav-link" to="/about">
                 About Us
@@ -95,7 +91,7 @@ function Navbar(props) {
             className="btn btn-outline-success my-2 my-sm-0"
             onClick={showCartHandler}
           >
-            Cart ({cartCtx.totalQty})
+            Cart ({cartQty})
           </button>
         </div>
       </nav>

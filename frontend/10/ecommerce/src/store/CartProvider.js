@@ -8,7 +8,7 @@ const { email } = JSON.parse(localStorage.getItem("user")) || {
 };
 
 const defaultCartState = {
-  email:email,
+  email: email,
   products: [],
   totalQty: 0,
   showModal: false,
@@ -37,12 +37,14 @@ const cartReducer = (state, action) => {
       products: updatedProducts,
       totalQty: updatedQty,
     };
-  } else if (action.type === "TOGGLE-SHOW") {
+  } 
+  else if (action.type === "TOGGLE-SHOW") {
     return {
       ...state,
       showModal: true,
     };
-  } else if (action.type === "TOGGLE-HIDE") {
+  } 
+  else if (action.type === "TOGGLE-HIDE") {
     return {
       ...state,
       showModal: false,
@@ -51,6 +53,25 @@ const cartReducer = (state, action) => {
     return {
       ...state,
       email: action.email,
+    };
+  } 
+  else if (action.type === "REMOVE") {
+    const itemIndex = state.products.findIndex((product) => {
+      return product.id == action.id;
+    });
+    let updatedProducts = [...state.products];
+
+    if (updatedProducts[itemIndex].qty > 1) {
+      updatedProducts[itemIndex].qty -= 1;
+    } else if (updatedProducts[itemIndex].qty == 1) {
+      updatedProducts = updatedProducts.filter((product) => {
+        return product.id != action.id;
+      });
+    }
+    return {
+      ...state,
+      products: updatedProducts,
+      totalQty: state.totalQty - 1,
     };
   }
   return state;
@@ -72,11 +93,11 @@ export const CartProvider = ({ children }) => {
       email: cartState.email,
     };
 
-    const response = await axios.post(
-      `https://crudcrud.com/api/b1d32e7455d140f2bf91105eb4e49c69/cart${updatedEmail}`,
-      payload
-    );
-    console.log(response);
+    // const response = await axios.post(
+    //   `https://crudcrud.com/api/b1d32e7455d140f2bf91105eb4e49c69/cart${updatedEmail}`,
+    //   payload
+    // );
+    // console.log(response);
   };
 
   const showCartHandler = () => {
@@ -87,15 +108,22 @@ export const CartProvider = ({ children }) => {
     dispatchCartAction({ type: "TOGGLE-HIDE" });
   };
 
+  const removeFromCartHandler = (id) => {
+    dispatchCartAction({ type: "REMOVE", id: id });
+  };
+
   const cartContext = {
-    addToCart: addToCartHandler,
     email: cartState.email,
     products: cartState.products,
     totalQty: cartState.totalQty,
     showModal: cartState.showModal,
+    addToCart: addToCartHandler,
     showCartHandler: showCartHandler,
     hideCartHandler: hideCartHandler,
+    removeFromCart: removeFromCartHandler,
   };
+
+  console.log(cartContext)
 
   return (
     <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>

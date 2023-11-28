@@ -1,0 +1,50 @@
+let currentPage = 1;
+const itemsPerPage = 10; // Adjust this to your desired page size
+
+async function loadExpenses() {
+    try {
+        // Make an API request with the current page and page size
+        const response = await axios.get(`http://localhost:3000/load-expense?userId=${userId}&page=${currentPage}&pageSize=${itemsPerPage}`);
+        
+        if (response.status === 200) {
+            const expensesContainer = document.querySelector('.expenses-box');
+            expensesContainer.innerHTML = '';
+
+            response.data.expenses.forEach(expense => {
+                const expenseElement = createExpenseElement(expense);
+                expensesContainer.appendChild(expenseElement);
+            });
+
+            // Update pagination controls
+            currentPage = response.data.page;
+            // Display Next and Previous buttons based on currentPage and response.data.pageCount
+            updatePaginationControls(currentPage, response.data.pageCount);
+        } else {
+            console.log("Error loading expenses");
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function updatePaginationControls(currentPage, pageCount) {
+    const previousButton = document.getElementById('previous-button');
+    const nextButton = document.getElementById('next-button');
+
+    previousButton.disabled = currentPage === 1;
+    nextButton.disabled = currentPage === pageCount;
+
+    previousButton.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            loadExpenses();
+        }
+    });
+
+    nextButton.addEventListener('click', () => {
+        if (currentPage < pageCount) {
+            currentPage++;
+            loadExpenses();
+        }
+    });
+}
