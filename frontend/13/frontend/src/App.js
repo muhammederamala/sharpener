@@ -9,6 +9,7 @@ import {
 
 import SignupPage from "./pages/SignupPage";
 import HomePage from './pages/HomePage'
+import LoginPage from './pages/LoginPage';
 
 function App() {
   const router = createBrowserRouter(
@@ -16,6 +17,7 @@ function App() {
       <Route>
         <Route path='/' element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path='/login' element={<LoginPage />} />
       </Route>
     )
   );

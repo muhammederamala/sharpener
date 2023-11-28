@@ -51,7 +51,7 @@ exports.postLogin = async (req,res,next) =>{
 
         if (passwordMatch){
             const token = jwt.sign({ userId: user.id }, 'your-secret-key', {
-                expiresIn: '1h',
+                expiresIn: '7d',
             });
             res.status(200).json({message: "Succesfully logged in !",redirectTo: `/?userId=${user.id}&page=1`,token: token})
         }
