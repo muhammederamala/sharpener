@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Navbar() {
+  const navigate = useNavigate()
   const liStyle = { minWidth: "100px" };
 
   const [userData, setUserData] = useState({
@@ -40,6 +41,11 @@ function Navbar() {
     fetchData();
   }, []);
 
+  const logoutHandler = () =>{
+    localStorage.removeItem('Token')
+    navigate('/login')
+  }
+
   return (
     <Fragment>
       <nav
@@ -72,10 +78,7 @@ function Navbar() {
             </li>
             {userData.displayName && userData.photoUrl ? (
               <li className="nav-item" style={liStyle}>
-                <NavLink
-                  to="/profile"
-                  className="nav-link"
-                >
+                <NavLink to="/profile" className="nav-link">
                   <img
                     src={userData.photoUrl}
                     alt="User"
@@ -96,6 +99,11 @@ function Navbar() {
                 </NavLink>
               </li>
             )}
+            <li className="nav-item p-1" style={liStyle}>
+              <button className="nav-link" onClick={logoutHandler} >
+                Logout
+              </button>
+            </li>
           </ul>
         </div>
       </nav>
