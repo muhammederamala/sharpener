@@ -8,7 +8,6 @@ function SignupPage() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -24,7 +23,6 @@ function SignupPage() {
 
   const isFormValid = () => {
     return (
-      formData.name.trim() !== "" &&
       formData.email.includes("@") &&
       formData.password.length >= 6 &&
       formData.password === formData.confirmPassword
@@ -33,28 +31,26 @@ function SignupPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData, formValid);
     if (!isFormValid()) {
       setFormValid(false);
       return;
     }
     // Continue with form submission logic
     const signUpDetails = {
-      name: formData.name,
       email: formData.email,
       password: formData.password,
+      returnSecureToken: true
     };
 
     try {
-      const response = await axios.post('http://localhost:4000/user/signup',signUpDetails);
-
+      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDXbZYq5uHCeDvfqOMDUJkbkWqIKj4op80', signUpDetails);
+      localStorage.setItem('Token',response.data.idToken)
       navigate("/");
     } catch (err) {
       console.log(err)
     }
 
     setFormData({
-      name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -70,20 +66,6 @@ function SignupPage() {
         >
           <h2>Signup</h2>
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="name" className="form-label">
-                Name:
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
                 Email:

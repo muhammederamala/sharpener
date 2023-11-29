@@ -31,10 +31,10 @@ function LoginPage() {
     try {
       setIncorrect(false);
       const response = await axios.post(
-        "http://localhost:4000/user/login",
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDXbZYq5uHCeDvfqOMDUJkbkWqIKj4op80",
         loginDetails
       );
-      localStorage.setItem('Token',response.data.token)
+      localStorage.setItem('Token',response.data.idToken)
       navigate("/");
       setFormData({
         name: "",

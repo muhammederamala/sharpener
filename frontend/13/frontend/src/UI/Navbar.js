@@ -1,11 +1,44 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
 
-
-function Navbar(props) {
-
+function Navbar() {
   const liStyle = { minWidth: "100px" };
 
+  const [userData, setUserData] = useState({
+    displayName: null,
+    photoUrl: null,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const apiKey = "AIzaSyDXbZYq5uHCeDvfqOMDUJkbkWqIKj4op80";
+        const idToken = localStorage.getItem("Token");
+
+        if (idToken) {
+          const response = await axios.post(
+            `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`,
+            { idToken }
+          );
+
+          if (response.data.users && response.data.users.length > 0) {
+            const user = response.data.users[0];
+            if (user.displayName && user.photoUrl) {
+              setUserData({
+                displayName: user.displayName,
+                photoUrl: user.photoUrl,
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <Fragment>
@@ -37,11 +70,32 @@ function Navbar(props) {
                 Home
               </NavLink>
             </li>
-            <li className="nav-item p-1" style={liStyle}>
-              <NavLink className="nav-link" to="/profile">
-                Profile
-              </NavLink>
-            </li>
+            {userData.displayName && userData.photoUrl ? (
+              <li className="nav-item" style={liStyle}>
+                <NavLink
+                  to="/profile"
+                  className="nav-link"
+                >
+                  <img
+                    src={userData.photoUrl}
+                    alt="User"
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "50%",
+                    }}
+                    className="mr-2"
+                  />
+                  {userData.displayName}
+                </NavLink>
+              </li>
+            ) : (
+              <li className="nav-item p-1" style={liStyle}>
+                <NavLink className="nav-link" to="/profile">
+                  Profile
+                </NavLink>
+              </li>
+            )}
           </ul>
         </div>
       </nav>

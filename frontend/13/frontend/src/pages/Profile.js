@@ -5,27 +5,29 @@ import { useNavigate } from "react-router";
 
 function Profile() {
   const navigate = useNavigate();
-  const [profile, setProfile] = useState({ name: "", email: "" });
-  const [formData, setFormData] = useState({ name: "", email: "" });
-
+  const [formData, setFormData] = useState({ displayName: "", photoUrl: "" });
   const token = localStorage.getItem("Token");
 
   useEffect(() => {
-    async function fetchUserDetails() {
+    const fetchUserData = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/user/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const response = await axios.post(
+          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDXbZYq5uHCeDvfqOMDUJkbkWqIKj4op80",
+          {
+            idToken: token,
+          }
+        );
+        const userData = response.data.users[0];
+        setFormData({
+          displayName: userData.displayName || "",
+          photoUrl: userData.photoUrl || "",
         });
-        const { name, email } = response.data.user;
-        setProfile({ name, email });
-        setFormData({ name, email });
-      } catch (error) {
-        console.error("Error fetching user details:", error);
+      } catch (err) {
+        console.log(err);
       }
-    }
-    fetchUserDetails();
+    };
+
+    fetchUserData();
   }, [token]);
 
   const handleChange = (e) => {
@@ -39,16 +41,16 @@ function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(
-        "http://localhost:4000/user/profile",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const payload = {
+        ...formData,
+        idToken: token,
+        returnSecureToken: false,
+      };
+      const response = await axios.post(
+        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDXbZYq5uHCeDvfqOMDUJkbkWqIKj4op80", // Replace with your actual API key
+        payload
       );
-      navigate('/')
+      navigate("/");
     } catch (err) {
       console.log(err);
     }
@@ -60,23 +62,23 @@ function Profile() {
         <Col md={{ span: 6, offset: 3 }}>
           <h2 className="mb-4">Profile</h2>
           <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="name">
-              <Form.Label>Name:</Form.Label>
+            <Form.Group controlId="displayName">
+              <Form.Label>Display Name:</Form.Label>
               <Form.Control
                 type="text"
-                name="name"
-                value={formData.name}
+                name="displayName"
                 onChange={handleChange}
+                value={formData.displayName}
                 className="m-2"
               />
             </Form.Group>
-            <Form.Group controlId="email">
-              <Form.Label>Email:</Form.Label>
+            <Form.Group controlId="photoUrl">
+              <Form.Label>Photo URL:</Form.Label>
               <Form.Control
-                type="email"
-                name="email"
-                value={formData.email}
+                type="text"
+                name="photoUrl"
                 onChange={handleChange}
+                value={formData.photoUrl}
                 className="m-2"
               />
             </Form.Group>
