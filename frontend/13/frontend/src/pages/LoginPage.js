@@ -1,7 +1,7 @@
 import React, { Fragment, useContext, useState } from "react";
 import axios from "axios";
 
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router-dom";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ function LoginPage() {
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDXbZYq5uHCeDvfqOMDUJkbkWqIKj4op80",
         loginDetails
       );
-      localStorage.setItem('Token',response.data.idToken)
+      localStorage.setItem("Token", response.data.idToken);
       navigate("/");
       setFormData({
         name: "",
@@ -45,6 +45,7 @@ function LoginPage() {
       setIncorrect(true);
     }
   };
+
   return (
     <Fragment>
       <div style={{ marginBottom: "80px", marginTop: "50px" }}>
@@ -86,6 +87,9 @@ function LoginPage() {
               Submit
             </button>
           </form>
+          <div className="mt-3">
+            <Link to="/forgot-password">Forgot Password?</Link>
+          </div>
           {incorrect && (
             <div className="alert alert-danger mt-3" role="alert">
               Incorrect email or password
