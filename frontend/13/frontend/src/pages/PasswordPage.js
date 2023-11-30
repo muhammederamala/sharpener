@@ -23,7 +23,7 @@ function PasswordPage() {
         requestType: "PASSWORD_RESET"
       }
 
-      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDXbZYq5uHCeDvfqOMDUJkbkWqIKj4op80',payload)
+      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDXxzjI1NKvI10Yz_uSoJbvlohynnXe6lE',payload)
       setLoading(false)
       setSuccess(true);
     } catch (error) {

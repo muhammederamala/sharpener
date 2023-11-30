@@ -12,7 +12,7 @@ function Profile() {
     const fetchUserData = async () => {
       try {
         const response = await axios.post(
-          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDXbZYq5uHCeDvfqOMDUJkbkWqIKj4op80",
+          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDXxzjI1NKvI10Yz_uSoJbvlohynnXe6lE",
           {
             idToken: token,
           }
@@ -47,7 +47,7 @@ function Profile() {
         returnSecureToken: false,
       };
       const response = await axios.post(
-        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDXbZYq5uHCeDvfqOMDUJkbkWqIKj4op80", // Replace with your actual API key
+        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDXxzjI1NKvI10Yz_uSoJbvlohynnXe6lE",
         payload
       );
       navigate("/");

@@ -31,7 +31,7 @@ function LoginPage() {
     try {
       setIncorrect(false);
       const response = await axios.post(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDXbZYq5uHCeDvfqOMDUJkbkWqIKj4op80",
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDXxzjI1NKvI10Yz_uSoJbvlohynnXe6lE",
         loginDetails
       );
       localStorage.setItem("Token", response.data.idToken);

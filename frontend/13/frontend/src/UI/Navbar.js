@@ -14,7 +14,7 @@ function Navbar() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiKey = "AIzaSyDXbZYq5uHCeDvfqOMDUJkbkWqIKj4op80";
+        const apiKey = "AIzaSyDXxzjI1NKvI10Yz_uSoJbvlohynnXe6lE";
         const idToken = localStorage.getItem("Token");
 
         if (idToken) {

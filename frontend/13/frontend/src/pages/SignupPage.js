@@ -43,7 +43,7 @@ function SignupPage() {
     };
 
     try {
-      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDXbZYq5uHCeDvfqOMDUJkbkWqIKj4op80', signUpDetails);
+      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDXxzjI1NKvI10Yz_uSoJbvlohynnXe6lE', signUpDetails);
       localStorage.setItem('Token',response.data.idToken)
       navigate("/");
     } catch (err) {
