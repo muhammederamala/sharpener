@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ExpenseTracker = () => {
   const [expenses, setExpenses] = useState([]);
@@ -21,30 +25,32 @@ const ExpenseTracker = () => {
     checkLoginStatus();
   }, []);
 
-  useEffect(() => {
-    const fetchExpenses = async () => {
-      try {
-        const idToken = localStorage.getItem("Token");
+  const fetchExpenses = async () => {
+    try {
+      const idToken = localStorage.getItem("Token");
 
-        const response = await axios.get(
-          "https://expensetracker-fb08e-default-rtdb.firebaseio.com/expenses.json"
+      const response = await axios.get(
+        "https://expensetracker-fb08e-default-rtdb.firebaseio.com/expenses.json"
+      );
+
+      if (response.data) {
+        const expensesData = Object.keys(response.data).map((key) => ({
+          id: key,
+          ...response.data[key],
+        }));
+
+        const userExpenses = expensesData.filter(
+          (expense) => expense.userId === userId
         );
-
-        if (response.data) {
-          const expensesData = Object.keys(response.data).map((key) => ({
-            id: key,
-            ...response.data[key],
-          }));
-
-          const userExpenses = expensesData.filter(
-            (expense) => expense.userId === userId
-          );
-          setExpenses(userExpenses);
-        }
-      } catch (error) {
-        console.error("Error fetching expenses", error);
+        setExpenses(userExpenses);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching expenses", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchExpenses();
 
     if (userId) {
       fetchExpenses();
@@ -72,8 +78,23 @@ const ExpenseTracker = () => {
       setAmount("");
       setDescription("");
       setCategory("");
+      fetchExpenses();
     } catch (error) {
       console.error("Error adding expense", error);
+    }
+  };
+
+  const handleDeleteExpense = async (id) => {
+    try {
+      const response = await axios.delete(
+        `https://expensetracker-fb08e-default-rtdb.firebaseio.com/expenses/${id}.json`
+      );
+      console.log(response);
+      setExpenses((prevExpenses) =>
+        prevExpenses.filter((expense) => expense.id !== id)
+      );
+    } catch (error) {
+      console.error("Error deleting expense:", error);
     }
   };
 
@@ -84,7 +105,7 @@ const ExpenseTracker = () => {
   return (
     <div className="container mt-5">
       <h1 className="mb-4">Expense Tracker</h1>
-      <div style={{maxWidth:"500px"}}>
+      <div style={{ maxWidth: "500px" }}>
         <form onSubmit={addExpense}>
           <div className="mb-3">
             <label htmlFor="amount" className="form-label">
@@ -144,7 +165,22 @@ const ExpenseTracker = () => {
             <div key={expense.id} className="col">
               <div className="card">
                 <div className="card-body">
-                  <h5 className="card-title">{expense.category}</h5>
+                  <div className="d-flex justify-content-between">
+                    <h5 className="card-title">{expense.category}</h5>
+                    <div>
+                      <span className="mx-2">
+                        <Link to={`/edit/${expense.id}`}>
+                          <FontAwesomeIcon icon={faEdit} />
+                        </Link>
+                      </span>
+                      <span>
+                        <FontAwesomeIcon
+                          icon={faTrash}
+                          onClick={() => handleDeleteExpense(expense.id)}
+                        />
+                      </span>
+                    </div>
+                  </div>
                   <p className="card-text">{expense.description}</p>
                   <p className="card-text">Amount: ${expense.amount}</p>
                 </div>

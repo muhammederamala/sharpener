@@ -383,7 +383,7 @@ exports.getAllGroups = async (req, res, next) => {
           {
             model: Group,
             as: 'groups',
-            attributes: ['GroupName','GroupId'], // Use the alias you defined for the association
+            attributes: ['GroupName','GroupId'], 
           },
         ],
       });

@@ -13,6 +13,7 @@ import LoginPage from './pages/LoginPage';
 import Layout from './UI/Layout';
 import Profile from './pages/Profile';
 import PasswordPage from './pages/PasswordPage';
+import EditPage from './pages/EditPage';
 
 function App() {
   const router = createBrowserRouter(
@@ -23,6 +24,7 @@ function App() {
         <Route path='/login' element={<LoginPage />} />
         <Route path='/profile' element={<Profile/>} />
         <Route path='/forgot-password' element={<PasswordPage />} />
+        <Route path='/edit/:id' element={<EditPage />} />
       </Route>
     )
   );
