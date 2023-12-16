@@ -11,3 +11,4 @@
 11. movies app, react
 12. Authentication
 13. Expense tracker
+14. redux intro
