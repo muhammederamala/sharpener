@@ -2,20 +2,36 @@ import React, { Fragment, useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import { useSelector } from "react-redux";
+
 function Navbar() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const liStyle = { minWidth: "100px" };
+
+  const [loggedIn, setIsLoggedIn] = useState(false);
 
   const [userData, setUserData] = useState({
     displayName: null,
     photoUrl: null,
   });
 
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  let idToken = useSelector((state) => state.auth.idToken);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setIsLoggedIn(true);
+    }
+  }, [isAuthenticated]);
+
+  if (!idToken) {
+    idToken = localStorage.getItem("Token");
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const apiKey = "AIzaSyDXxzjI1NKvI10Yz_uSoJbvlohynnXe6lE";
-        const idToken = localStorage.getItem("Token");
 
         if (idToken) {
           const response = await axios.post(
@@ -39,12 +55,12 @@ function Navbar() {
     };
 
     fetchData();
-  }, []);
+  }, [idToken]);
 
-  const logoutHandler = () =>{
-    localStorage.removeItem('Token')
-    navigate('/login')
-  }
+  const logoutHandler = () => {
+    localStorage.removeItem("Token");
+    navigate("/login");
+  };
 
   return (
     <Fragment>
@@ -100,7 +116,7 @@ function Navbar() {
               </li>
             )}
             <li className="nav-item p-1" style={liStyle}>
-              <button className="nav-link" onClick={logoutHandler} >
+              <button className="nav-link" onClick={logoutHandler}>
                 Logout
               </button>
             </li>

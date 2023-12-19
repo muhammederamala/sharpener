@@ -3,7 +3,11 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
+import { authActions } from "../store";
+import { useDispatch } from "react-redux";
+
 function SignupPage() {
+  const dispatch = useDispatch();
   const [formValid, setFormValid] = useState(true);
   const navigate = useNavigate();
 
@@ -39,15 +43,18 @@ function SignupPage() {
     const signUpDetails = {
       email: formData.email,
       password: formData.password,
-      returnSecureToken: true
+      returnSecureToken: true,
     };
 
     try {
-      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDXxzjI1NKvI10Yz_uSoJbvlohynnXe6lE', signUpDetails);
-      localStorage.setItem('Token',response.data.idToken)
+      const response = await axios.post(
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDXxzjI1NKvI10Yz_uSoJbvlohynnXe6lE",
+        signUpDetails
+      );
+      dispatch(authActions.login({ idToken: response.data.idToken }));
       navigate("/");
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
 
     setFormData({

@@ -3,7 +3,12 @@ import axios from "axios";
 
 import { useNavigate, Link } from "react-router-dom";
 
+import { authActions } from "../store";
+import { useDispatch } from "react-redux";
+
 function LoginPage() {
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const [incorrect, setIncorrect] = useState();
   const [formData, setFormData] = useState({
@@ -34,7 +39,7 @@ function LoginPage() {
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDXxzjI1NKvI10Yz_uSoJbvlohynnXe6lE",
         loginDetails
       );
-      localStorage.setItem("Token", response.data.idToken);
+      dispatch(authActions.login({ idToken: response.data.idToken }));
       navigate("/");
       setFormData({
         name: "",

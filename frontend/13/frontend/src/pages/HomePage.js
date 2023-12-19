@@ -5,13 +5,22 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { expenseActions } from "../store";
+
 const ExpenseTracker = () => {
+  const dispatch = useDispatch();
+
   const [expenses, setExpenses] = useState([]);
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState("");
+
+  const higher = useSelector((state) => state.expense.higher);
+  console.log(higher);
 
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -32,17 +41,19 @@ const ExpenseTracker = () => {
       const response = await axios.get(
         "https://expensetracker-fb08e-default-rtdb.firebaseio.com/expenses.json"
       );
-
       if (response.data) {
         const expensesData = Object.keys(response.data).map((key) => ({
           id: key,
           ...response.data[key],
         }));
-
-        const userExpenses = expensesData.filter(
-          (expense) => expense.userId === userId
-        );
+        const userExpenses = expensesData.filter((expense) => {
+          return expense.userId == userId;
+        });
+        const totalExpenseSum = userExpenses.reduce((sum, expense) => {
+          return sum + parseFloat(expense.amount);
+        }, 0);
         setExpenses(userExpenses);
+        dispatch(expenseActions.syncExpense({ expense: totalExpenseSum }));
       }
     } catch (error) {
       console.error("Error fetching expenses", error);
@@ -50,8 +61,6 @@ const ExpenseTracker = () => {
   };
 
   useEffect(() => {
-    fetchExpenses();
-
     if (userId) {
       fetchExpenses();
     }
@@ -78,18 +87,19 @@ const ExpenseTracker = () => {
       setAmount("");
       setDescription("");
       setCategory("");
+      dispatch(expenseActions.addExpense({ expense: amount }));
       fetchExpenses();
     } catch (error) {
       console.error("Error adding expense", error);
     }
   };
 
-  const handleDeleteExpense = async (id) => {
+  const handleDeleteExpense = async (id, amount) => {
     try {
       const response = await axios.delete(
         `https://expensetracker-fb08e-default-rtdb.firebaseio.com/expenses/${id}.json`
       );
-      console.log(response);
+      dispatch(expenseActions.removeExpense({ expense: amount }));
       setExpenses((prevExpenses) =>
         prevExpenses.filter((expense) => expense.id !== id)
       );
@@ -176,7 +186,9 @@ const ExpenseTracker = () => {
                       <span>
                         <FontAwesomeIcon
                           icon={faTrash}
-                          onClick={() => handleDeleteExpense(expense.id)}
+                          onClick={() =>
+                            handleDeleteExpense(expense.id, expense.amount)
+                          }
                         />
                       </span>
                     </div>
