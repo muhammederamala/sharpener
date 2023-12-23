@@ -38,7 +38,7 @@ function EditPage() {
       amount,
       description,
       category,
-      userId
+      userId,
     };
 
     try {

@@ -42,7 +42,7 @@ const expenseSlice = createSlice({
       state.expense = action.payload.expense;
     },
     removeExpense(state, action) {
-      if (state.expense + action.payload.expense < 1000) {
+      if (state.expense - action.payload.expense < 1000) {
         state.higher = false;
       }
       state.expense = state.expense - action.payload.expense;

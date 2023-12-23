@@ -216,12 +216,12 @@ const ExpenseTracker = () => {
             <h1>Total Expense</h1>
             <p>{`$ ${totalExpense}`}</p>
             {higher && <button className="btn btn-warning">Premium</button>}
-            <button
+            {/* <button
               className="btn btn-success mt-3"
               onClick={() => dispatch(themeActions.switch())}
             >
               {isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            </button>
+            </button> */}
             <br></br>
             <button className="btn btn-success mt-3" onClick={downloadCsv}>
               Download expenses
