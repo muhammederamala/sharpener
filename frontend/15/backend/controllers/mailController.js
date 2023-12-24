@@ -27,7 +27,11 @@ exports.getFetchMails = async (req, res) => {
 
     const receivedMails = await Mail.find({ recipientEmail: userEmail });
 
-    return res.status(200).json(receivedMails);
+    const unreadCount = receivedMails.filter((mail) => !mail.read).length;
+
+    return res
+      .status(200)
+      .json({ receivedMails: receivedMails, unreadCount: unreadCount });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -36,16 +40,18 @@ exports.getFetchMails = async (req, res) => {
 
 exports.getFetchMailById = async (req, res) => {
   try {
-    const mailId = req.params.mailId;
+    const { id } = req.query;
 
-    // Find the email by its ID
-    const mail = await Mail.findById(mailId);
+    const mail = await Mail.findById(id);
 
     if (!mail) {
       return res.status(404).json({ error: "Mail not found" });
     }
 
-    return res.status(200).json(mail);
+    mail.read = true;
+    await mail.save();
+
+    return res.status(200).json({ mail: mail });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });

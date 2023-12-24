@@ -11,6 +11,6 @@ router.post("/send-mail", authentication, mailController.postSendMail);
 
 router.get("/fetch-all-mails", authentication, mailController.getFetchMails);
 
-router.get("get-mail-by-id", authentication, mailController.getFetchMailById);
+router.get("/get-mail-by-id", authentication, mailController.getFetchMailById);
 
 module.exports = router;

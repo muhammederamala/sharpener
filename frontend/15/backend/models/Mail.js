@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const mailSchema = new mongoose.Schema({
   senderEmail: {
@@ -17,12 +17,16 @@ const mailSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  read: {
+    type: Boolean,
+    default: false,
+  },
   sentAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-const Mail = mongoose.model('Mail', mailSchema);
+const Mail = mongoose.model("Mail", mailSchema);
 
 module.exports = Mail;

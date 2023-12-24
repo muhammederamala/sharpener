@@ -2,3 +2,7 @@
   background-color: whitesmoke;
   cursor: pointer;
 }
+
+.card.unread-mail .card-body {
+  border: 2px solid blue;
+}

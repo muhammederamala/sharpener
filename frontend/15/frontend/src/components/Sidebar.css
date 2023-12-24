@@ -1,0 +1,24 @@
+/* Add these styles to your CSS or use a CSS-in-JS solution */
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    background-color: #f4f4f4; 
+    padding: 10px;
+    height: 1000px;
+  }
+  
+  .sidebar a {
+    text-decoration: none;
+    color: #333; 
+    padding: 8px 0;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .sidebar a:hover {
+    background-color: #ddd;
+  }
+  
