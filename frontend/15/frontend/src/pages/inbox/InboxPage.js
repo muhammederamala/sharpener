@@ -38,6 +38,8 @@ function InboxPage() {
     };
 
     fetchMails();
+    const intervalId = setInterval(fetchMails, 2000);
+    return () => clearInterval(intervalId);
   }, [token]);
 
   const handleDeleteMail = async (mailId) => {
