@@ -40,6 +40,23 @@ function InboxPage() {
     fetchMails();
   }, [token]);
 
+  const handleDeleteMail = async (mailId) => {
+    try {
+      await axios.delete(`http://localhost:4000/mail/delete-mail`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          id: mailId,
+        },
+      });
+
+      setMails((prevMails) => prevMails.filter((mail) => mail._id !== mailId));
+    } catch (error) {
+      console.error("Error deleting mail:", error);
+    }
+  };
+
   return (
     <div className="container mx-0">
       <div className="row">
@@ -60,9 +77,7 @@ function InboxPage() {
                     className="list-group-item mb-3 px-0"
                     style={{ border: "none" }}
                   >
-                    <Link
-                      style={{ textDecoration: "none" }}
-                      to={`/mail/${mail._id}`}
+                    <div
                       className={`card mail ${
                         mail.read ? "read-mail" : "unread-mail"
                       }`}
@@ -71,8 +86,14 @@ function InboxPage() {
                         <h5 className="card-title">From: {mail.senderEmail}</h5>
                         <p className="card-text">Subject: {mail.subject}</p>
                         <p className="card-text">Body: {mail.body}</p>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => handleDeleteMail(mail._id)}
+                        >
+                          Delete
+                        </button>
                       </div>
-                    </Link>
+                    </div>
                   </li>
                 ))}
               </ul>

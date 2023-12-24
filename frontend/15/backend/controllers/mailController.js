@@ -57,3 +57,21 @@ exports.getFetchMailById = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+exports.deleteMail = async (req, res, next) => {
+  try {
+    const { id } = req.query;
+
+    // Using Mongoose's findOneAndDelete to find and delete the mail
+    const deletedMail = await Mail.findOneAndDelete({ _id: id });
+
+    if (!deletedMail) {
+      return res.status(404).json({ error: "Mail not found" });
+    }
+
+    return res.status(204).end();
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
