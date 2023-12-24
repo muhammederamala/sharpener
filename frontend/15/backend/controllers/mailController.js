@@ -21,13 +21,11 @@ exports.postSendMail = async (req, res) => {
   }
 };
 
-// GET /api/fetch-mails/:userEmail
 exports.getFetchMails = async (req, res) => {
   try {
-    const userEmail = req.params.userEmail;
+    const userEmail = req.userEmail;
 
-    // Find all emails where the user is a recipient
-    const receivedMails = await Mail.find({ receiverEmail: userEmail });
+    const receivedMails = await Mail.find({ recipientEmail: userEmail });
 
     return res.status(200).json(receivedMails);
   } catch (error) {
