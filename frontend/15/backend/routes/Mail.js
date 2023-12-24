@@ -15,4 +15,6 @@ router.get("/get-mail-by-id", authentication, mailController.getFetchMailById);
 
 router.delete("/delete-mail", authentication, mailController.deleteMail);
 
+router.get("/fetch-user-mails", authentication, mailController.getFetchUserMails);
+
 module.exports = router;

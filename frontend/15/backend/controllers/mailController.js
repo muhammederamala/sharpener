@@ -75,3 +75,20 @@ exports.deleteMail = async (req, res, next) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+exports.getFetchUserMails = async (req, res) => {
+  try {
+    const userEmail = req.userEmail;
+
+    const receivedMails = await Mail.find({ senderEmail: userEmail });
+
+    const unreadCount = receivedMails.filter((mail) => !mail.read).length;
+
+    return res
+      .status(200)
+      .json({ receivedMails: receivedMails, unreadCount: unreadCount });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};

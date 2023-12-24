@@ -15,6 +15,9 @@ function Sidebar({ unread }) {
       <Link className="mt-1" to="/">
         Inbox
       </Link>
+      <Link className="mt-1" to="/sent">
+        Sent
+      </Link>
     </div>
   );
 }
